@@ -20,6 +20,12 @@ class RegisteredUserController extends Controller
      */
     public function create(): View
     {
+        // Prevent public access to staff registration
+        $requestedRole = request('role');
+        if ($requestedRole === 'staff' && !(auth()->check() && auth()->user()->role === 'admin')) {
+            return redirect()->route('login')->withErrors(['role' => 'Staff registration is restricted to administrators. Please contact an admin.']);
+        }
+
         return view('auth.register');
     }
 
@@ -30,22 +36,46 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        $request->validate([
+        // Determine allowed role: only admins may set role, public registrants default to 'appraiser'
+        $isAdminCreating = auth()->check() && auth()->user()->role === 'admin';
+
+        $rules = [
             'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:'.User::class],
+            'email' => ['required', 'string', 'email', 'max:255', 'unique:'.User::class],
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
-        ]);
+        ];
+
+        if ($isAdminCreating) {
+            $rules['role'] = ['required', 'in:admin,staff,appraiser'];
+        }
+
+        $validated = $request->validate($rules);
+
+        $role = $isAdminCreating ? $validated['role'] : 'appraiser';
+
+        // Auto-approve admin role; other roles need approval
+        $approved = ($role === 'admin') ? true : false;
+        if ($isAdminCreating && $request->filled('approved') && $request->approved) {
+            $approved = true;
+        }
 
         $user = User::create([
-            'name' => $request->name,
-            'email' => $request->email,
-            'password' => Hash::make($request->password),
+            'name' => $validated['name'],
+            'email' => $validated['email'],
+            'password' => Hash::make($validated['password']),
+            'role' => $role,
+            'approved' => $approved,
+            'approved_at' => $approved ? now() : null,
+            'approved_by' => $approved && $isAdminCreating ? auth()->id() : null,
         ]);
 
         event(new Registered($user));
 
-        Auth::login($user);
+        if ($isAdminCreating) {
+            return redirect()->route('users.index')->with('success', 'User created successfully. Account approval is required before the user can access the system.');
+        }
 
-        return redirect(route('dashboard', absolute: false));
+        // Public registration is disabled — should not reach here, but guard anyway
+        return redirect()->route('login')->with('success', 'Account created. Awaiting admin approval.');
     }
 }

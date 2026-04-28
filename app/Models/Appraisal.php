@@ -31,7 +31,28 @@ class Appraisal extends Model
     }
 
     public function appraiser()
-    {
+    {   
         return $this->belongsTo(User::class, 'appraiser_id');
+    }
+
+    // Scopes
+    public function scopeCompleted($query)
+    {
+        return $query->where('status', 'completed');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeByAppraiser($query, $userId)
+    {
+        return $query->where('appraiser_id', $userId);
+    }
+
+    public function scopeRecent($query, $days = 30)
+    {
+        return $query->whereBetween('created_at', [now()->subDays($days), now()]);
     }
 }

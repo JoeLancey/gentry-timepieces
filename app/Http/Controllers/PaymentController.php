@@ -1,64 +1,49 @@
 <?php
-
 namespace App\Http\Controllers;
+use App\Models\Payment;
+use App\Models\Transaction;
+use App\Http\Requests\StorePaymentRequest;
+use App\Http\Requests\UpdatePaymentRequest;
+use Illuminate\Support\Facades\Storage;
 
-use Illuminate\Http\Request;
-
-class PaymentController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+class PaymentController extends Controller {
+    public function index() { 
+        $payments = Payment::with('transaction.client')
+            ->when(request('status'), fn($q) => $q->where('status', request('status')))
+            ->when(request('method'), fn($q) => $q->where('method', request('method')))
+            ->latest()
+            ->paginate(15);
+        return view('payments.index', compact('payments')); 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create() { 
+        return view('payments.create', ['transactions'=>Transaction::where('is_fully_paid', false)->with('client')->get()]); 
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(StorePaymentRequest $request) {
+        $data = $request->validated();
+        if ($request->hasFile('proof_path')) {
+            $data['proof_path'] = $request->file('proof_path')->store('payments','public');
+        }
+        Payment::create($data);
+        return redirect()->route('payments.index')->with('success','Payment recorded.');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    public function show(Payment $payment) { 
+        return view('payments.show', compact('payment')); 
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+    public function edit(Payment $payment) { 
+        return view('payments.edit', ['payment'=>$payment,'transactions'=>Transaction::with('client')->get()]); 
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function update(UpdatePaymentRequest $request, Payment $payment) {
+        $data = $request->validated();
+        if ($request->hasFile('proof_path')) {
+            if ($payment->proof_path) Storage::disk('public')->delete($payment->proof_path);
+            $data['proof_path'] = $request->file('proof_path')->store('payments','public');
+        }
+        $payment->update($data);
+        return redirect()->route('payments.index')->with('success','Payment updated.');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy(Payment $payment) { 
+        if ($payment->proof_path) Storage::disk('public')->delete($payment->proof_path);
+        $payment->delete(); 
+        return redirect()->route('payments.index')->with('success','Payment deleted.'); 
     }
 }

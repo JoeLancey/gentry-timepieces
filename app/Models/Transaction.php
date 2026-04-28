@@ -38,4 +38,43 @@ class Transaction extends Model
     {
         return $this->hasMany(Payment::class);
     }
+
+    // Scopes
+    public function scopeSales($query)
+    {
+        return $query->where('type', 'sale');
+    }
+
+    public function scopePurchases($query)
+    {
+        return $query->where('type', 'purchase');
+    }
+
+    public function scopeByType($query, $type)
+    {
+        return $query->where('type', $type);
+    }
+
+    // Accessors
+    public function getTotalPaidAttribute()
+    {
+        return $this->payments()->where('status', 'confirmed')->sum('amount');
+    }
+
+    public function getRemainingAmountAttribute()
+    {
+        return round($this->amount - $this->total_paid, 2);
+    }
+
+    public function getPaymentStatusAttribute()
+    {
+        if ($this->total_paid >= $this->amount) return 'Paid';
+        if ($this->total_paid > 0) return 'Partial';
+        return 'Pending';
+    }
+
+    public function getIsFullyPaidAttribute()
+    {
+        return $this->total_paid >= $this->amount;
+    }
 }

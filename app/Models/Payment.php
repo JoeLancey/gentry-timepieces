@@ -27,4 +27,25 @@ class Payment extends Model
     {
         return $this->belongsTo(Transaction::class);
     }
+
+    // Scopes
+    public function scopeConfirmed($query)
+    {
+        return $query->where('status', 'confirmed');
+    }
+
+    public function scopePending($query)
+    {
+        return $query->where('status', 'pending');
+    }
+
+    public function scopeByMethod($query, $method)
+    {
+        return $query->where('method', $method);
+    }
+
+    public function scopeRecent($query, $days = 30)
+    {
+        return $query->whereBetween('created_at', [now()->subDays($days), now()]);
+    }
 }

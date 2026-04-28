@@ -1,64 +1,40 @@
 <?php
-
 namespace App\Http\Controllers;
+use App\Models\Consignment;
+use App\Models\Watch;
+use App\Models\Client;
+use App\Http\Requests\StoreConsignmentRequest;
+use App\Http\Requests\UpdateConsignmentRequest;
 
-use Illuminate\Http\Request;
-
-class ConsignmentController extends Controller
-{
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
-    {
-        //
+class ConsignmentController extends Controller {
+    public function index() { 
+        $consignments = Consignment::with(['watch','client'])
+            ->when(request('status'), fn($q) => $q->where('status', request('status')))
+            ->when(request('search'), fn($q) => $q->whereHas('client', fn($sq) => $sq->where('first_name', 'like', "%{request('search')}%")))
+            ->latest()
+            ->paginate(15);
+        $expiringSoon = Consignment::expiringSoon()->count();
+        return view('consignments.index', compact('consignments', 'expiringSoon')); 
     }
-
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
+    public function create() { 
+        return view('consignments.create', ['watches'=>Watch::available()->get(),'clients'=>Client::all()]); 
     }
-
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
+    public function store(StoreConsignmentRequest $request) {
+        Consignment::create($request->validated());
+        return redirect()->route('consignments.index')->with('success','Consignment saved.');
     }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        //
+    public function show(Consignment $consignment) { 
+        return view('consignments.show', compact('consignment')); 
     }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        //
+    public function edit(Consignment $consignment) { 
+        return view('consignments.edit', ['consignment'=>$consignment,'watches'=>Watch::all(),'clients'=>Client::all()]); 
     }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
-    {
-        //
+    public function update(UpdateConsignmentRequest $request, Consignment $consignment) {
+        $consignment->update($request->validated());
+        return redirect()->route('consignments.index')->with('success','Consignment updated.');
     }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
-    {
-        //
+    public function destroy(Consignment $consignment) { 
+        $consignment->delete(); 
+        return redirect()->route('consignments.index')->with('success','Consignment deleted.'); 
     }
 }

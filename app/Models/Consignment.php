@@ -34,4 +34,43 @@ class Consignment extends Model
     {
         return $this->belongsTo(Client::class);
     }
+
+    // Scopes
+    public function scopeActive($query)
+    {
+        return $query->where('status', 'active');
+    }
+
+    public function scopeExpired($query)
+    {
+        return $query->where('status', 'expired');
+    }
+
+    public function scopeExpiringSoon($query)
+    {
+        return $query->where('end_date', '<=', now()->addDays(7))
+            ->where('status', 'active');
+    }
+
+    // Accessors
+    public function getCommissionAmountAttribute()
+    {
+        return round($this->agreed_price * $this->commission_rate / 100, 2);
+    }
+
+    public function getNetAmountAttribute()
+    {
+        return round($this->agreed_price - $this->commission_amount, 2);
+    }
+
+    public function getDaysRemainingAttribute()
+    {
+        if (!$this->end_date) return null;
+        return $this->end_date->diffInDays(now());
+    }
+
+    public function getIsExpiringSoonAttribute()
+    {
+        return $this->days_remaining !== null && $this->days_remaining <= 7;
+    }
 }

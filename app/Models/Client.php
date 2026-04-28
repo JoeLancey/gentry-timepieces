@@ -37,4 +37,24 @@ class Client extends Model
     {
         return $this->hasMany(Transaction::class);
     }
+
+    // Scopes
+    public function scopeSearch($query, $search)
+    {
+        return $query->where('first_name', 'like', "%{$search}%")
+            ->orWhere('last_name', 'like', "%{$search}%")
+            ->orWhere('email', 'like', "%{$search}%")
+            ->orWhere('phone', 'like', "%{$search}%");
+    }
+
+    // Accessors
+    public function getTotalTransactionsAttribute()
+    {
+        return $this->transactions()->count();
+    }
+
+    public function getTotalSpentAttribute()
+    {
+        return $this->transactions()->where('type', 'sale')->sum('amount');
+    }
 }

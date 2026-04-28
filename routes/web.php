@@ -15,7 +15,15 @@ Route::get('/', function () {
     return redirect()->route('login');
 });
 
+// Allow authenticated users to see a pending approval page before the approved middleware blocks them
 Route::middleware(['auth'])->group(function () {
+    Route::get('/approval-pending', function () {
+        return view('auth.approval_pending');
+    })->name('approval.pending');
+});
+
+// Main app routes require authentication and approval
+Route::middleware(['auth','approved'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('watches', WatchController::class);
@@ -28,6 +36,7 @@ Route::middleware(['auth'])->group(function () {
     Route::middleware(['role:admin'])->group(function () {
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::resource('users', UserController::class);
+        Route::post('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
     });
 });
 

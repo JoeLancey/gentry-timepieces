@@ -15,6 +15,9 @@ class User extends Authenticatable
         'email',
         'password',
         'role',
+        'approved',
+        'approved_at',
+        'approved_by',
     ];
 
     protected $hidden = [
@@ -22,13 +25,12 @@ class User extends Authenticatable
         'remember_token',
     ];
 
-    protected function casts(): array
-    {
-        return [
-            'email_verified_at' => 'datetime',
-            'password' => 'hashed',
-        ];
-    }
+    protected $casts = [
+        'email_verified_at' => 'datetime',
+        'approved' => 'boolean',
+        'approved_at' => 'datetime',
+        'password' => 'hashed',
+    ];
 
     public function isAdmin(): bool
     {
@@ -40,6 +42,11 @@ class User extends Authenticatable
         return $this->role === 'staff';
     }
 
+    public function scopeApproved($query)
+    {
+        return $query->where('approved', true);
+    }
+
     public function appraisals()
     {
         return $this->hasMany(Appraisal::class, 'appraiser_id');
@@ -48,5 +55,10 @@ class User extends Authenticatable
     public function transactions()
     {
         return $this->hasMany(Transaction::class, 'staff_id');
+    }
+
+    public function approver()
+    {
+        return $this->belongsTo(self::class, 'approved_by');
     }
 }

@@ -2,63 +2,70 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
+use App\Models\Watch;
+use App\Http\Requests\StoreWatchRequest;
+use App\Http\Requests\UpdateWatchRequest;
+use Illuminate\Pagination\LengthAwarePaginator;
+use Throwable;
 
 class WatchController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $this->authorize('viewAny', Watch::class);
+        try {
+            $watches = Watch::query()
+                ->when(request('search'), fn($q) => $q->search(request('search')))
+                ->when(request('status'), fn($q) => $q->where('status', request('status')))
+                ->when(request('condition'), fn($q) => $q->where('condition', request('condition')))
+                ->latest()
+                ->paginate(15);
+        } catch (Throwable $e) {
+            report($e);
+            $dbError = 'Database unavailable: please verify your database server and .env settings.';
+            $watches = new LengthAwarePaginator([], 0, 15, request('page', 1), ['path' => request()->url(), 'query' => request()->query()]);
+            return view('watches.index', compact('watches'))->with('db_error', $dbError);
+        }
+
+        return view('watches.index', compact('watches'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
     public function create()
     {
-        //
+        $this->authorize('create', Watch::class);
+        return view('watches.create');
     }
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
+    public function store(StoreWatchRequest $request)
     {
-        //
+        $this->authorize('create', Watch::class);
+        Watch::create($request->validated());
+        return redirect()->route('watches.index')->with('success', 'Watch added successfully.');
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
+    public function show(Watch $watch)
     {
-        //
+        $this->authorize('view', $watch);
+        return view('watches.show', compact('watch'));
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
+    public function edit(Watch $watch)
     {
-        //
+        $this->authorize('update', $watch);
+        return view('watches.edit', compact('watch'));
     }
 
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, string $id)
+    public function update(UpdateWatchRequest $request, Watch $watch)
     {
-        //
+        $this->authorize('update', $watch);
+        $watch->update($request->validated());
+        return redirect()->route('watches.index')->with('success', 'Watch updated successfully.');
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(string $id)
+    public function destroy(Watch $watch)
     {
-        //
+        $this->authorize('delete', $watch);
+        $watch->delete();
+        return redirect()->route('watches.index')->with('success', 'Watch deleted successfully.');
     }
 }
