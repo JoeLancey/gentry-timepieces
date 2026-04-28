@@ -10,6 +10,7 @@ use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\ReportController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\ActivityLogController;
 
 Route::get('/', function () {
     return redirect()->route('login');
@@ -27,6 +28,12 @@ Route::middleware(['auth','approved'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
 
     Route::resource('watches', WatchController::class);
+    Route::post('watches/bulk-action', [WatchController::class, 'bulkAction'])->name('watches.bulkAction');
+    Route::post('watches/bulk-price', [WatchController::class, 'bulkPrice'])->name('watches.bulkPrice');
+    Route::post('watches/save-filter', [WatchController::class, 'saveFilter'])->name('watches.saveFilter');
+    Route::get('watches/{id}/restore', [WatchController::class, 'restore'])->name('watches.restore');
+    Route::get('watches/filter/{filter}', [WatchController::class, 'applyFilter'])->name('watches.applyFilter');
+    
     Route::resource('clients', ClientController::class);
     Route::resource('appraisals', AppraisalController::class);
     Route::resource('consignments', ConsignmentController::class);
@@ -37,6 +44,7 @@ Route::middleware(['auth','approved'])->group(function () {
         Route::get('/reports', [ReportController::class, 'index'])->name('reports.index');
         Route::resource('users', UserController::class);
         Route::post('users/{user}/approve', [UserController::class, 'approve'])->name('users.approve');
+        Route::resource('activity-logs', ActivityLogController::class, ['only' => ['index', 'show']]);
     });
 });
 

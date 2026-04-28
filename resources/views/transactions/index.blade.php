@@ -19,7 +19,10 @@
                             <div style="display:flex;gap:0.5rem;justify-content:flex-end;">
                                 <a href="{{ route('transactions.show', $t) }}" class="btn btn-secondary btn-sm">View</a>
                                 <a href="{{ route('transactions.edit', $t) }}" class="btn btn-secondary btn-sm">Edit</a>
-                                <form method="POST" action="{{ route('transactions.destroy', $t) }}" onsubmit="return confirm('Delete?')">@csrf @method('DELETE')<button type="submit" class="btn btn-danger btn-sm">Delete</button></form>
+                                <form method="POST" action="{{ route('transactions.destroy', $t) }}" onsubmit="return confirm('Delete?')">
+                                    @csrf @method('DELETE')
+                                    <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                                </form>
                             </div>
                         </td>
                     </tr>
@@ -29,7 +32,10 @@
         </div>
         <div style="padding:1.25rem 1.5rem;border-top:1px solid var(--gray-pale);">{{ $transactions->links() }}</div>
         @else
-        <div class="empty-state"><p>No transactions recorded yet.</p><a href="{{ route('transactions.create') }}" class="btn btn-primary">Record First Transaction</a></div>
+        <div class="empty-state">
+            <p>No transactions recorded yet.</p>
+            <a href="{{ route('transactions.create') }}" class="btn btn-primary">Record First Transaction</a>
+        </div>
         @endif
     </div>
 </x-app-layout>

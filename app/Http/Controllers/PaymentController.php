@@ -15,9 +15,16 @@ class PaymentController extends Controller {
             ->paginate(15);
         return view('payments.index', compact('payments')); 
     }
+
     public function create() { 
-        return view('payments.create', ['transactions'=>Transaction::where('is_fully_paid', false)->with('client')->get()]); 
+        return view('payments.create', [
+            'transactions' => Transaction::with('client')
+                ->whereDoesntHave('payments', fn($q) => $q->where('status', 'confirmed'))
+                ->latest()
+                ->get()
+        ]); 
     }
+
     public function store(StorePaymentRequest $request) {
         $data = $request->validated();
         if ($request->hasFile('proof_path')) {
@@ -26,12 +33,18 @@ class PaymentController extends Controller {
         Payment::create($data);
         return redirect()->route('payments.index')->with('success','Payment recorded.');
     }
+
     public function show(Payment $payment) { 
         return view('payments.show', compact('payment')); 
     }
+
     public function edit(Payment $payment) { 
-        return view('payments.edit', ['payment'=>$payment,'transactions'=>Transaction::with('client')->get()]); 
+        return view('payments.edit', [
+            'payment'      => $payment,
+            'transactions' => Transaction::with('client')->get()
+        ]); 
     }
+
     public function update(UpdatePaymentRequest $request, Payment $payment) {
         $data = $request->validated();
         if ($request->hasFile('proof_path')) {
@@ -41,6 +54,7 @@ class PaymentController extends Controller {
         $payment->update($data);
         return redirect()->route('payments.index')->with('success','Payment updated.');
     }
+
     public function destroy(Payment $payment) { 
         if ($payment->proof_path) Storage::disk('public')->delete($payment->proof_path);
         $payment->delete(); 

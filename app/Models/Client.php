@@ -38,6 +38,11 @@ class Client extends Model
         return $this->hasMany(Transaction::class);
     }
 
+    public function payments()
+    {
+        return $this->hasMany(Payment::class);
+    }
+
     // Scopes
     public function scopeSearch($query, $search)
     {

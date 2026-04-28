@@ -61,4 +61,14 @@ class User extends Authenticatable
     {
         return $this->belongsTo(self::class, 'approved_by');
     }
+
+    public function activityLogs()
+    {
+        return $this->hasMany(ActivityLog::class);
+    }
+
+    public function watchFilters()
+    {
+        return $this->hasMany(WatchFilter::class);
+    }
 }

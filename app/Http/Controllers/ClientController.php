@@ -1,22 +1,96 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Models\Client;
+use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
-class ClientController extends Controller {
-    public function index() { return view('clients.index', ['clients' => Client::latest()->paginate(15)]); }
-    public function create() { return view('clients.create'); }
-    public function store(Request $request) {
-        $request->validate(['first_name'=>'required','last_name'=>'required','phone'=>'required','email'=>'nullable|email']);
-        Client::create($request->only('first_name','last_name','phone','email','address','notes'));
-        return redirect()->route('clients.index')->with('success','Client saved.');
+class ClientController extends Controller
+{
+    public function index()
+    {
+        $clients = Client::withCount(['transactions', 'consignments', 'appraisals'])
+            ->when(request('search'), fn($q) => $q->search(request('search')))
+            ->latest()
+            ->paginate(15);
+        return view('clients.index', compact('clients'));
     }
-    public function show(Client $client) { return view('clients.show', compact('client')); }
-    public function edit(Client $client) { return view('clients.edit', compact('client')); }
-    public function update(Request $request, Client $client) {
-        $request->validate(['first_name'=>'required','last_name'=>'required','phone'=>'required','email'=>'nullable|email']);
-        $client->update($request->only('first_name','last_name','phone','email','address','notes'));
-        return redirect()->route('clients.index')->with('success','Client updated.');
+
+    public function create()
+    {
+        return view('clients.create');
     }
-    public function destroy(Client $client) { $client->delete(); return redirect()->route('clients.index')->with('success','Client deleted.'); }
+
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
+            'notes' => 'nullable|string',
+        ]);
+
+        $client = Client::create($validated);
+        ActivityLogService::logCreate($client, 'New client added: ' . $client->full_name);
+        return redirect()->route('clients.index')->with('success', 'Client added successfully.');
+    }
+
+    public function show(Client $client)
+    {
+        // Load insights
+        $totalTransactions = $client->transactions()->count();
+        $totalSpent = $client->transactions()->sum('total_amount');
+        
+        // Calculate total paid through transactions' payments
+        $totalPaid = $client->transactions()
+            ->join('payments', 'transactions.id', '=', 'payments.transaction_id')
+            ->where('payments.status', 'completed')
+            ->sum('payments.amount');
+        
+        $outstandingBalance = $totalSpent - $totalPaid;
+        $averageSpend = $totalTransactions > 0 ? $totalSpent / $totalTransactions : 0;
+        $recentTransactions = $client->transactions()->latest()->take(10)->get();
+
+        return view('clients.show', compact(
+            'client',
+            'totalTransactions',
+            'totalSpent',
+            'totalPaid',
+            'outstandingBalance',
+            'averageSpend',
+            'recentTransactions'
+        ));
+    }
+
+    public function edit(Client $client)
+    {
+        return view('clients.edit', compact('client'));
+    }
+
+    public function update(Request $request, Client $client)
+    {
+        $oldValues = $client->getAttributes();
+        $validated = $request->validate([
+            'first_name' => 'required|string|max:255',
+            'last_name' => 'required|string|max:255',
+            'phone' => 'required|string|max:20',
+            'email' => 'nullable|email|max:255',
+            'address' => 'nullable|string|max:500',
+            'notes' => 'nullable|string',
+        ]);
+
+        $client->update($validated);
+        ActivityLogService::logUpdate($client, $oldValues, 'Client updated: ' . $client->full_name);
+        return redirect()->route('clients.index')->with('success', 'Client updated successfully.');
+    }
+
+    public function destroy(Client $client)
+    {
+        ActivityLogService::logDelete($client, 'Client deleted: ' . $client->full_name);
+        $client->delete();
+        return redirect()->route('clients.index')->with('success', 'Client deleted successfully.');
+    }
 }
