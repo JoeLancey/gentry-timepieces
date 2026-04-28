@@ -5,6 +5,7 @@ use App\Models\Watch;
 use App\Models\Consignment;
 use App\Models\Payment;
 use App\Models\Appraisal;
+use Illuminate\Support\Carbon;
 
 class ReportController extends Controller {
     public function index() {
@@ -16,7 +17,12 @@ class ReportController extends Controller {
             ->groupBy('date')
             ->latest('date')
             ->take(30)
-            ->get();
+            ->get()
+            ->map(function ($sale) {
+                $sale->date = Carbon::parse($sale->date);
+
+                return $sale;
+            });
 
         // Revenue Report
         $confirmedPayments = Payment::confirmed()->sum('amount');
@@ -65,6 +71,7 @@ class ReportController extends Controller {
         return view('reports.index', compact(
             'totalSales',
             'salesCount',
+            'salesData',
             'confirmedPayments',
             'pendingPayments',
             'paymentsByMethod',

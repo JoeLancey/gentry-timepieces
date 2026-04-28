@@ -12,4 +12,4 @@
         <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge badge-{{ $payment->status }}">{{ $payment->status }}</span></span></div>
         <div class="detail-row"><span class="detail-label">Confirmed At</span><span class="detail-value">{{ $payment->confirmed_at ? $payment->confirmed_at->format('F d, Y h:i A') : '—' }}</span></div>
     </div></div>
-</x-app-layout>
+</x-app-layout> 
