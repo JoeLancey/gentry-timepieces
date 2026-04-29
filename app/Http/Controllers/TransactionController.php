@@ -3,7 +3,6 @@ namespace App\Http\Controllers;
 use App\Models\Transaction;
 use App\Models\Watch;
 use App\Models\Client;
-use App\Models\User;
 use App\Http\Requests\StoreTransactionRequest;
 use App\Http\Requests\UpdateTransactionRequest;
 use Illuminate\Support\Str;
@@ -38,28 +37,47 @@ class TransactionController extends Controller {
         return view('transactions.index', compact('transactions', 'stats')); 
     }
     public function create() { 
-        return view('transactions.create', ['watches'=>Watch::available()->get(),'clients'=>Client::all(),'staff'=>User::where('role','staff')->get()]); 
+        return view('transactions.create', ['watches'=>Watch::available()->get(),'clients'=>Client::all()]); 
     }
     public function store(StoreTransactionRequest $request) {
         $data = $request->validated();
         $data['staff_id'] = auth()->id();
         $data['invoice_number'] = 'INV-' . strtoupper(Str::random(8));
         $transaction = Transaction::create($data);
-        Watch::find($request->watch_id)->update(['status'=>'sold']);
+        $this->syncWatchStatus($transaction);
         return redirect()->route('transactions.index')->with('success','Transaction recorded.');
     }
     public function show(Transaction $transaction) { 
         return view('transactions.show', compact('transaction')); 
     }
     public function edit(Transaction $transaction) { 
-        return view('transactions.edit', ['transaction'=>$transaction,'watches'=>Watch::all(),'clients'=>Client::all(),'staff'=>User::where('role','staff')->get()]); 
+        return view('transactions.edit', ['transaction'=>$transaction,'watches'=>Watch::all(),'clients'=>Client::all()]); 
     }
     public function update(UpdateTransactionRequest $request, Transaction $transaction) {
-        $transaction->update($request->validated());
+        $originalWatchId = $transaction->watch_id;
+        $data = $request->validated();
+        $data['staff_id'] = $transaction->staff_id;
+        $transaction->update($data);
+        $this->syncWatchStatus($transaction);
+        if ($originalWatchId !== $transaction->watch_id) {
+            Watch::whereKey($originalWatchId)->update(['status' => 'available']);
+        }
         return redirect()->route('transactions.index')->with('success','Transaction updated.');
     }
     public function destroy(Transaction $transaction) { 
+        if ($transaction->watch) {
+            $transaction->watch->update(['status' => 'available']);
+        }
         $transaction->delete(); 
         return redirect()->route('transactions.index')->with('success','Transaction deleted.'); 
+    }
+
+    private function syncWatchStatus(Transaction $transaction): void
+    {
+        $status = $transaction->type === 'sale' ? 'sold' : 'available';
+
+        if ($transaction->watch) {
+            $transaction->watch->update(['status' => $status]);
+        }
     }
 }

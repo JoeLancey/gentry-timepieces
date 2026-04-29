@@ -1,126 +1,90 @@
 <x-app-layout header="Edit Transaction">
-    <x-slot:actions><a href="{{ route('transactions.show', $transaction) }}" class="btn btn-secondary">← Back</a></x-slot:actions>
-    
-    <div class="form-container">
-        <div class="form-card">
-    
-            border-bottom: 1px solid #eeeeee;
-        }
-        .form-header h2 {
-            font-size: 1.5rem;
-            margin-bottom: 0.5rem;
-            color: #000;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        .form-header p {
-            color: #808080;
-            font-size: 0.9rem;
-        }
-        .form-section {
-            margin-bottom: 1.5rem;
-        }
-        .form-label {
-            display: block;
-            font-weight: 600;
-            margin-bottom: 0.5rem;
-            color: #000;
-            font-size: 0.9rem;
-            letter-spacing: 0.05em;
-        }
-        .form-label.required::after {
-            content: ' *';
-            color: #000;
-        }
-        .form-control {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border: 1px solid #cccccc;
-            font-size: 0.95rem;
-            font-family: inherit;
-            transition: all 0.2s;
-        }
-        .form-control:focus {
-            outline: none;
-            border-color: #000;
-            box-shadow: none;
-        }
-        .form-grid-2 {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 1.5rem;
-        }
-        .form-error {
-            color: #000;
-            font-size: 0.85rem;
-            margin-top: 0.4rem;
-            font-weight: 600;
-        }
-        .form-actions {
-            display: flex;
-            gap: 1rem;
-            margin-top: 2rem;
-            padding-top: 1.5rem;
-            border-top: 1px solid #eeeeee;
-        }
-        .btn-lg {
-            padding: 0.75rem 1.5rem !important;
-            font-size: 0.95rem !important;
-        }
-        
-        .form-sidebar {
-            position: sticky;
-            top: 100px;
-            height: fit-content;
-        }
-        .summary-card {
-            background: #fff;
-            border: 1px solid #000;
-            color: #000;
-            padding: 1.5rem;
-            box-shadow: none;
-        }
-        .summary-card h3 {
-            font-size: 1rem;
-            margin-bottom: 1.25rem;
-            font-weight: 700;
-            letter-spacing: -0.02em;
-        }
-        .summary-item {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 1rem;
-            font-size: 0.9rem;
-        }
-        .summary-item span {
-            color: #808080;
-            font-weight: 500;
-        }
-        .summary-item strong {
-            font-weight: 700;
-        }
-        .summary-divider {
-            height: 1px;
-            background: #eeeeee;
-            margin: 1rem 0;
-        }
-        @media (max-width: 768px) {
-            .form-container {
-                grid-template-columns: 1fr;
-            }
-            .form-grid-2 {
-                grid-template-columns: 1fr;
-            }
-        }
-    </style>
+    <x-slot:actions>
+        <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-secondary">← Back</a>
+    </x-slot:actions>
 
-    <script>
-        function updateWatchInfo() {
-            const select = document.getElementById('watch_id');
-            const selectedOption = select.options[select.selectedIndex];
-            const price = selectedOption.dataset.price || 0;
-        }
-        updateWatchInfo();
-    </script>
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <div class="lg:col-span-2">
+            <div class="card p-6">
+                <form method="POST" action="{{ route('transactions.update', $transaction) }}">
+                    @csrf @method('PUT')
+
+                    <div class="form-grid form-grid-2">
+                        <div class="form-group">
+                            <label class="form-label">Watch *</label>
+                            <select name="watch_id" class="form-select" required>
+                                @foreach($watches as $watch)
+                                    <option value="{{ $watch->id }}" {{ old('watch_id',$transaction->watch_id)==$watch->id?'selected':'' }}>
+                                        {{ $watch->brand }} {{ $watch->model }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('watch_id')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Client *</label>
+                            <select name="client_id" class="form-select" required>
+                                @foreach($clients as $client)
+                                    <option value="{{ $client->id }}" {{ old('client_id',$transaction->client_id)==$client->id?'selected':'' }}>
+                                        {{ $client->first_name }} {{ $client->last_name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('client_id')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Type *</label>
+                            <select name="type" class="form-select" required>
+                                <option value="sale" {{ old('type',$transaction->type)=='sale'?'selected':'' }}>Sale</option>
+                                <option value="trade_in" {{ old('type',$transaction->type)=='trade_in'?'selected':'' }}>Trade-in</option>
+                            </select>
+                            @error('type')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Amount (₱) *</label>
+                            <input type="number" name="amount" class="form-input" value="{{ old('amount',$transaction->amount) }}" step="0.01" required>
+                            @error('amount')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+
+                    <div class="form-group mt-6">
+                        <label class="form-label">Notes</label>
+                        <textarea name="notes" class="form-textarea">{{ old('notes',$transaction->notes) }}</textarea>
+                    </div>
+
+                    <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
+                        <button type="submit" class="btn btn-primary">Update Transaction</button>
+                        <a href="{{ route('transactions.index') }}" class="btn btn-secondary">Cancel</a>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="space-y-6">
+            <div class="card p-5">
+                <h3 class="text-base font-bold text-gray-900 mb-4">Transaction Info</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Invoice</span>
+                        <strong class="font-mono">{{ $transaction->invoice_number }}</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Type</span>
+                        <strong class="capitalize">{{ str_replace('_',' ',$transaction->type) }}</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Created</span>
+                        <strong>{{ $transaction->created_at->format('M d, Y') }}</strong>
+                    </div>
+                    <div class="flex justify-between">
+                        <span class="text-gray-500">Processed By</span>
+                        <strong>{{ $transaction->staff->name }}</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </x-app-layout>

@@ -1,18 +1,63 @@
-<x-app-layout header="Consignment Detail">
-    <x-slot name="actions">
+<x-app-layout header="Consignment Details">
+    <x-slot:actions>
         <a href="{{ route('consignments.edit', $consignment) }}" class="btn btn-primary">Edit</a>
         <a href="{{ route('consignments.index') }}" class="btn btn-secondary">← Back</a>
-    </x-slot>
-    <div style="max-width:700px;"><div class="card">
-        <p style="font-size:0.6rem;letter-spacing:0.2em;text-transform:uppercase;color:var(--gray-mid);margin-bottom:1.25rem;">Consignment Information</p>
-        <div class="detail-row"><span class="detail-label">Watch</span><span class="detail-value">{{ $consignment->watch->brand }} {{ $consignment->watch->model }}</span></div>
-        <div class="detail-row"><span class="detail-label">Serial Number</span><span class="detail-value">{{ $consignment->watch->serial_number }}</span></div>
-        <div class="detail-row"><span class="detail-label">Client</span><span class="detail-value">{{ $consignment->client->first_name }} {{ $consignment->client->last_name }}</span></div>
-        <div class="detail-row"><span class="detail-label">Agreed Price</span><span class="detail-value" style="font-family:'Playfair Display',serif;font-size:1.2rem;">₱{{ number_format($consignment->agreed_price,2) }}</span></div>
-        <div class="detail-row"><span class="detail-label">Commission Rate</span><span class="detail-value">{{ $consignment->commission_rate }}%</span></div>
-        <div class="detail-row"><span class="detail-label">Status</span><span class="detail-value"><span class="badge badge-{{ $consignment->status }}">{{ $consignment->status }}</span></span></div>
-        <div class="detail-row"><span class="detail-label">Start Date</span><span class="detail-value">{{ $consignment->start_date->format('F d, Y') }}</span></div>
-        <div class="detail-row"><span class="detail-label">End Date</span><span class="detail-value">{{ $consignment->end_date ? $consignment->end_date->format('F d, Y') : '—' }}</span></div>
-        <div class="detail-row"><span class="detail-label">Notes</span><span class="detail-value" style="color:var(--gray-mid);">{{ $consignment->notes ?? '—' }}</span></div>
-    </div></div>
+    </x-slot:actions>
+
+    <div class="max-w-2xl">
+        <div class="card p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Watch</p>
+                    <p class="font-semibold text-gray-900">{{ $consignment->watch->brand }} {{ $consignment->watch->model }}</p>
+                    <p class="text-sm text-gray-500">Serial: {{ $consignment->watch->serial_number }}</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Client</p>
+                    <p class="font-semibold text-gray-900">{{ $consignment->client->first_name }} {{ $consignment->client->last_name }}</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Agreed Price</p>
+                    <p class="text-2xl font-bold text-gray-900">₱{{ number_format($consignment->agreed_price, 2) }}</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Commission Rate</p>
+                    <p class="text-xl font-bold text-gray-900">{{ $consignment->commission_rate }}%</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Start Date</p>
+                    <p class="text-gray-900">{{ $consignment->start_date->format('M d, Y') }}</p>
+                </div>
+
+                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">End Date</p>
+                    <p class="text-gray-900">{{ $consignment->end_date ? $consignment->end_date->format('M d, Y') : '—' }}</p>
+                </div>
+
+                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Status</p>
+                    <p><span class="badge badge-{{ $consignment->status }}">{{ ucfirst($consignment->status) }}</span></p>
+                </div>
+
+                @if($consignment->notes)
+                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Notes</p>
+                    <p class="text-gray-700">{{ $consignment->notes }}</p>
+                </div>
+                @endif
+            </div>
+
+            <div class="mt-6 pt-6 border-t border-gray-200 flex items-center gap-3">
+                <a href="{{ route('consignments.edit', $consignment) }}" class="btn btn-primary">Edit Consignment</a>
+                <form method="POST" action="{{ route('consignments.destroy', $consignment) }}" onsubmit="return confirm('Delete this consignment?');" style="display:inline;">
+                    @csrf @method('DELETE')
+                    <button type="submit" class="btn btn-danger">Delete</button>
+                </form>
+            </div>
+        </div>
+    </div>
 </x-app-layout>

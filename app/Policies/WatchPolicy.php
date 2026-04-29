@@ -19,12 +19,12 @@ class WatchPolicy
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'staff']);
+        return $user->role === 'admin';
     }
 
     public function update(User $user, Watch $watch): bool
     {
-        return in_array($user->role, ['admin', 'staff']);
+        return $user->role === 'admin';
     }
 
     public function delete(User $user, Watch $watch): bool

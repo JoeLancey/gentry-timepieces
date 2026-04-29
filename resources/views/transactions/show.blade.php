@@ -4,58 +4,55 @@
         <a href="{{ route('transactions.index') }}" class="btn btn-secondary">← Back</a>
     </x-slot>
 
-    <div class="detail-container">
-        <div class="detail-main">
-            <div class="detail-card">
-                <!-- Header -->
-                <div class="detail-header">
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+        <!-- Main Content -->
+        <div class="lg:col-span-2">
+            <div class="card p-6">
+                <div class="flex flex-wrap items-start justify-between gap-4 mb-6 pb-6 border-b border-gray-200">
                     <div>
-                        <h2 class="invoice-number">{{ $transaction->invoice_number }}</h2>
-                        <p class="invoice-date">{{ $transaction->created_at->format('F d, Y \a\t g:i A') }}</p>
+                        <h2 class="text-2xl font-mono font-bold text-gray-900 tracking-tight">{{ $transaction->invoice_number }}</h2>
+                        <p class="text-sm text-gray-500 mt-1">{{ $transaction->created_at->format('F d, Y \a\t g:i A') }}</p>
                     </div>
-                    <div class="transaction-badge badge-{{ $transaction->type }}">
+                    <span class="badge badge-{{ $transaction->type }}">
                         {{ ucfirst(str_replace('_', ' ', $transaction->type)) }}
+                    </span>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Watch</p>
+                        <p class="font-semibold text-gray-900">{{ $transaction->watch->brand }} {{ $transaction->watch->model }}</p>
+                        <p class="text-sm text-gray-500 mt-0.5">Serial: {{ $transaction->watch->serial_number ?? '—' }}</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Client</p>
+                        <p class="font-semibold text-gray-900">{{ $transaction->client->first_name }} {{ $transaction->client->last_name }}</p>
+                        <p class="text-sm text-gray-500 mt-0.5">{{ $transaction->client->email ?? '—' }}</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Staff</p>
+                        <p class="font-semibold text-gray-900">{{ $transaction->staff->name }}</p>
+                        <p class="text-sm text-gray-500 mt-0.5">{{ $transaction->staff->email }}</p>
+                    </div>
+
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Amount</p>
+                        <p class="text-2xl font-bold text-gray-900">₱{{ number_format($transaction->amount, 2) }}</p>
+                        <p class="text-sm text-gray-500 mt-0.5">Transaction value</p>
                     </div>
                 </div>
 
-                <!-- Main Info Grid -->
-                <div class="detail-grid">
-                    <div class="detail-box">
-                        <span class="detail-label">Watch</span>
-                        <p class="detail-value">{{ $transaction->watch->brand }} {{ $transaction->watch->model }}</p>
-                        <span class="detail-hint">Serial: {{ $transaction->watch->serial_number ?? '—' }}</span>
-                    </div>
-
-                    <div class="detail-box">
-                        <span class="detail-label">Client</span>
-                        <p class="detail-value">{{ $transaction->client->first_name }} {{ $transaction->client->last_name }}</p>
-                        <span class="detail-hint">{{ $transaction->client->email ?? '—' }}</span>
-                    </div>
-
-                    <div class="detail-box">
-                        <span class="detail-label">Staff</span>
-                        <p class="detail-value">{{ $transaction->staff->name }}</p>
-                        <span class="detail-hint">{{ $transaction->staff->email }}</span>
-                    </div>
-
-                    <div class="detail-box">
-                        <span class="detail-label">Amount</span>
-                        <p class="detail-value amount">₱{{ number_format($transaction->amount, 2) }}</p>
-                        <span class="detail-hint">Transaction value</span>
-                    </div>
-                </div>
-
-                <!-- Notes Section -->
                 @if($transaction->notes)
-                <div class="notes-section">
-                    <span class="detail-label">Notes</span>
-                    <p class="notes-content">{{ $transaction->notes }}</p>
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg border-l-4 border-l-gray-900 mb-6">
+                    <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Notes</p>
+                    <p class="text-gray-700 leading-relaxed">{{ $transaction->notes }}</p>
                 </div>
                 @endif
 
-                <!-- Action Buttons -->
-                <div class="detail-actions">
-                    <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-secondary">Edit Transaction</a>
+                <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
+                    <a href="{{ route('transactions.edit', $transaction) }}" class="btn btn-primary">Edit Transaction</a>
                     <form method="POST" action="{{ route('transactions.destroy', $transaction) }}" onsubmit="return confirm('Are you sure you want to delete this transaction?');" style="display:inline;">
                         @csrf @method('DELETE')
                         <button type="submit" class="btn btn-danger">Delete</button>
@@ -64,50 +61,52 @@
             </div>
         </div>
 
-        <!-- Sidebar Info -->
-        <div class="detail-sidebar">
-            <div class="sidebar-widget">
-                <h3>Transaction Summary</h3>
-                <div class="widget-item">
-                    <span>Invoice Number</span>
-                    <strong>{{ $transaction->invoice_number }}</strong>
-                </div>
-                <div class="widget-item">
-                    <span>Amount</span>
-                    <strong>₱{{ number_format($transaction->amount, 2) }}</strong>
-                </div>
-                <div class="widget-item">
-                    <span>Type</span>
-                    <strong>{{ ucfirst(str_replace('_', ' ', $transaction->type)) }}</strong>
-                </div>
-                <div class="widget-divider"></div>
-                <div class="widget-item">
-                    <span>Recorded On</span>
-                    <strong>{{ $transaction->created_at->format('M d, Y') }}</strong>
-                </div>
-                <div class="widget-item">
-                    <span>Last Updated</span>
-                    <strong>{{ $transaction->updated_at->format('M d, Y') }}</strong>
+        <!-- Sidebar -->
+        <div class="space-y-6">
+            <div class="card p-5">
+                <h3 class="text-base font-bold text-gray-900 mb-4">Transaction Summary</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Invoice Number</span>
+                        <strong class="font-mono text-gray-900">{{ $transaction->invoice_number }}</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Amount</span>
+                        <strong class="text-gray-900">₱{{ number_format($transaction->amount, 2) }}</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Type</span>
+                        <strong class="text-gray-800 capitalize">{{ str_replace('_', ' ', $transaction->type) }}</strong>
+                    </div>
+                    <div class="border-t border-gray-200 my-2"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Recorded On</span>
+                        <strong class="text-gray-900">{{ $transaction->created_at->format('M d, Y') }}</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Last Updated</span>
+                        <strong class="text-gray-900">{{ $transaction->updated_at->format('M d, Y') }}</strong>
+                    </div>
                 </div>
             </div>
 
-            <div class="sidebar-widget">
-                <h3>Watch Info</h3>
-                <div class="widget-item">
-                    <span>Brand</span>
-                    <strong>{{ $transaction->watch->brand }}</strong>
-                </div>
-                <div class="widget-item">
-                    <span>Model</span>
-                    <strong>{{ $transaction->watch->model }}</strong>
-                </div>
-                <div class="widget-item">
-                    <span>Asking Price</span>
-                    <strong>₱{{ number_format($transaction->watch->asking_price, 2) }}</strong>
+            <div class="card p-5">
+                <h3 class="text-base font-bold text-gray-900 mb-4">Watch Info</h3>
+                <div class="space-y-3">
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Brand</span>
+                        <strong class="text-gray-900">{{ $transaction->watch->brand }}</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Model</span>
+                        <strong class="text-gray-900">{{ $transaction->watch->model }}</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Asking Price</span>
+                        <strong class="text-gray-900">₱{{ number_format($transaction->watch->asking_price, 2) }}</strong>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-
-    
 </x-app-layout>

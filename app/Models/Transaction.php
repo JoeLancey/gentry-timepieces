@@ -45,9 +45,9 @@ class Transaction extends Model
         return $query->where('type', 'sale');
     }
 
-    public function scopePurchases($query)
+    public function scopeTradeIns($query)
     {
-        return $query->where('type', 'purchase');
+        return $query->where('type', 'trade_in');
     }
 
     public function scopeByType($query, $type)

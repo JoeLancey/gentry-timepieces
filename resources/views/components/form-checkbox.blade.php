@@ -1,18 +1,13 @@
 @props(['value', 'label', 'required' => false])
 
-<div style="margin-bottom: 1rem;">
-    <label style="display: flex; align-items: center; cursor: pointer;">
-        <input 
-            type="checkbox" 
-            value="1"
-            {{ old($name, $value) ? 'checked' : '' }}
-            {{ $required ? 'required' : '' }}
-            {{ $attributes->merge(['class' => 'form-checkbox', 'name' => $name]) }}
-            style="margin-right: 0.5rem; width: 1rem; height: 1rem; cursor: pointer;"
-        />
-        <span>{{ $label }}</span>
+<div class="flex items-center gap-2 mb-4">
+    <input 
+        type="checkbox" 
+        {{ old($name ?? '', $value) ? 'checked' : '' }}
+        {{ $required ? 'required' : '' }}
+        {{ $attributes->merge(['class' => 'w-4 h-4 accent-gray-900']) }}
+    />
+    <label class="text-sm font-medium text-gray-700 cursor-pointer">
+        {{ $label }}
     </label>
-    @error($name)
-        <small style="color: #d32f2f; display: block; margin-top: 0.25rem;">{{ $message }}</small>
-    @enderror
 </div>

@@ -36,13 +36,14 @@
         /* ── SIDEBAR ── */
         .sidebar {
             width: var(--sidebar-width);
-            min-height: 100vh;
+            height: 100vh;
             background: var(--black);
-            display: flex;
-            flex-direction: column;
+            display: grid;
+            grid-template-rows: auto minmax(0, 1fr) auto;
             position: fixed;
             top: 0; left: 0; bottom: 0;
             z-index: 50;
+            overflow: hidden;
         }
 
         .sidebar-logo {
@@ -69,9 +70,11 @@
         }
 
         .sidebar-nav {
-            flex: 1;
+            min-height: 0;
             padding: 1.5rem 0;
             overflow-y: auto;
+            -webkit-overflow-scrolling: touch;
+            overscroll-behavior: contain;
         }
 
         .nav-section-label {
@@ -98,6 +101,15 @@
         .sidebar-link:hover {
             color: var(--white);
             background: #161616;
+        }
+
+        .sidebar-link-button {
+            width: 100%;
+            background: none;
+            border: 0;
+            text-align: left;
+            font: inherit;
+            appearance: none;
         }
 
         .sidebar-link.active {
@@ -561,11 +573,13 @@
             @elseif(isset($slots['header']))
                 <h1>{{ $slots['header'] }}</h1>
             @endif
-            @if(!is_null($actions))
-                <div class="top-bar-actions">{{ $actions }}</div>
-            @elseif(isset($slots['actions']))
-                <div class="top-bar-actions">{{ $slots['actions'] }}</div>
-            @endif
+            <div class="top-bar-actions">
+                @if(!is_null($actions))
+                    {{ $actions }}
+                @elseif(isset($slots['actions']))
+                    {{ $slots['actions'] }}
+                @endif
+            </div>
         </div>
         @endif
 

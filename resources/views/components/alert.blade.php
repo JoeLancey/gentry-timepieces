@@ -1,21 +1,21 @@
-@props(['message', 'type' => 'info'])
+@props(['type' => 'info'])
 
-@if ($message = session('success'))
-    <div class="alert alert-success" role="alert">
-        {{ $message }}
+@if(session('success'))
+    <div class="alert alert-success animate-fade-in" role="alert">
+        {{ session('success') }}
     </div>
 @endif
 
-@if ($message = session('error'))
-    <div class="alert alert-danger" role="alert">
-        {{ $message }}
+@if(session('error'))
+    <div class="alert alert-danger animate-fade-in" role="alert">
+        {{ session('error') }}
     </div>
 @endif
 
-@if ($errors->any())
-    <div class="alert alert-danger" role="alert">
-        <ul style="margin: 0; padding-left: 1.25rem;">
-            @foreach ($errors->all() as $error)
+@if($errors->any())
+    <div class="alert alert-danger animate-fade-in" role="alert">
+        <ul class="mt-2 pl-4 list-disc list-inside">
+            @foreach($errors->all() as $error)
                 <li>{{ $error }}</li>
             @endforeach
         </ul>

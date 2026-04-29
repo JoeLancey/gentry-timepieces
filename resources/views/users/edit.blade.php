@@ -1,17 +1,52 @@
 <x-app-layout header="Edit User">
-    <x-slot:actions><a href="{{ route('users.index') }}" class="btn btn-secondary">← Back</a></x-slot:actions>
-    <div class="card" style="max-width:500px;">
-        <form method="POST" action="{{ route('users.update', $user) }}">
-            @csrf @method('PUT')
-            <div class="form-grid">
-                <div class="form-group"><label class="gt-label">Name *</label><input type="text" name="name" class="gt-input" value="{{ old('name',$user->name) }}" required></div>
-                <div class="form-group"><label class="gt-label">Email *</label><input type="email" name="email" class="gt-input" value="{{ old('email',$user->email) }}" required></div>
-                <div class="form-group"><label class="gt-label">New Password</label><input type="password" name="password" class="gt-input"><span style="font-size:0.68rem;color:var(--gray-mid);">Leave blank to keep current password</span></div>
-                <div class="form-group"><label class="gt-label">Confirm Password</label><input type="password" name="password_confirmation" class="gt-input"></div>
-                <div class="form-group"><label class="gt-label">Role *</label>
-                    <select name="role" class="gt-select" required><option value="staff" {{ old('role',$user->role)=='staff'?'selected':'' }}>Staff</option><option value="admin" {{ old('role',$user->role)=='admin'?'selected':'' }}>Admin</option></select></div>
-            </div>
-            <div style="display:flex;gap:0.75rem;margin-top:1.5rem;"><button type="submit" class="btn btn-primary">Update User</button><a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a></div>
-        </form>
+    <x-slot:actions>
+        <a href="{{ route('users.index') }}" class="btn btn-secondary">← Back</a>
+    </x-slot:actions>
+
+    <div class="max-w-md">
+        <div class="card p-6">
+            <form method="POST" action="{{ route('users.update', $user) }}">
+                @csrf @method('PUT')
+
+                <div class="form-group">
+                    <label class="form-label">Name *</label>
+                    <input type="text" name="name" class="form-input" value="{{ old('name',$user->name) }}" required>
+                    @error('name')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Email *</label>
+                    <input type="email" name="email" class="form-input" value="{{ old('email',$user->email) }}" required>
+                    @error('email')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Role *</label>
+                    <select name="role" class="form-select" required>
+                        @foreach(['staff','admin'] as $r)
+                            <option value="{{ $r }}" {{ old('role',$user->role)==$r?'selected':'' }}>{{ ucfirst($r) }}</option>
+                        @endforeach
+                    </select>
+                    @error('role')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">New Password</label>
+                    <input type="password" name="password" class="form-input">
+                    <p class="text-xs text-gray-500 mt-1">Leave blank to keep current password</p>
+                    @error('password')<div class="form-error">{{ $message }}</div>@enderror
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">Confirm New Password</label>
+                    <input type="password" name="password_confirmation" class="form-input">
+                </div>
+
+                <div class="flex items-center gap-3 pt-4 border-t border-gray-200">
+                    <button type="submit" class="btn btn-primary">Update User</button>
+                    <a href="{{ route('users.index') }}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
     </div>
 </x-app-layout>

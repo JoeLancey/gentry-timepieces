@@ -36,7 +36,7 @@ class RegisteredUserController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
-        // Determine allowed role: only admins may set role, public registrants default to 'appraiser'
+        // Determine allowed role: only admins may set role, other users default to staff
         $isAdminCreating = auth()->check() && auth()->user()->role === 'admin';
 
         $rules = [
@@ -46,36 +46,26 @@ class RegisteredUserController extends Controller
         ];
 
         if ($isAdminCreating) {
-            $rules['role'] = ['required', 'in:admin,staff,appraiser'];
+            $rules['role'] = ['required', 'in:admin,staff'];
         }
 
         $validated = $request->validate($rules);
 
-        $role = $isAdminCreating ? $validated['role'] : 'appraiser';
-
-        // Auto-approve admin role; other roles need approval
-        $approved = ($role === 'admin') ? true : false;
-        if ($isAdminCreating && $request->filled('approved') && $request->approved) {
-            $approved = true;
-        }
+        $role = $isAdminCreating ? $validated['role'] : 'staff';
 
         $user = User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
             'password' => Hash::make($validated['password']),
             'role' => $role,
-            'approved' => $approved,
-            'approved_at' => $approved ? now() : null,
-            'approved_by' => $approved && $isAdminCreating ? auth()->id() : null,
         ]);
 
         event(new Registered($user));
 
         if ($isAdminCreating) {
-            return redirect()->route('users.index')->with('success', 'User created successfully. Account approval is required before the user can access the system.');
+            return redirect()->route('users.index')->with('success', 'User created successfully.');
         }
 
-        // Public registration is disabled — should not reach here, but guard anyway
-        return redirect()->route('login')->with('success', 'Account created. Awaiting admin approval.');
+        return redirect()->route('login')->with('success', 'Account created successfully.');
     }
 }

@@ -19,27 +19,13 @@ class UserController extends Controller {
     }
     public function store(StoreUserRequest $request) {
         $this->authorize('create', User::class);
-        // Auto-approve admin role; other roles need approval
-        $approved = ($request->role === 'admin') ? true : ($request->has('approved') ? (bool) $request->approved : false);
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role' => $request->role,
-            'approved' => $approved,
-            'approved_at' => $approved ? now() : null,
-            'approved_by' => $approved ? auth()->id() : null,
         ]);
         return redirect()->route('users.index')->with('success','User created.');
-    }
-
-    public function approve(User $user) {
-        $this->authorize('update', $user);
-        $user->approved = true;
-        $user->approved_at = now();
-        $user->approved_by = auth()->id();
-        $user->save();
-        return redirect()->route('users.index')->with('success','User approved.');
     }
     public function show(User $user) { 
         $this->authorize('view', $user);

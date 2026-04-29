@@ -18,10 +18,7 @@ class PaymentController extends Controller {
 
     public function create() { 
         return view('payments.create', [
-            'transactions' => Transaction::with('client')
-                ->whereDoesntHave('payments', fn($q) => $q->where('status', 'confirmed'))
-                ->latest()
-                ->get()
+            'transactions' => Transaction::with('client')->latest()->get()
         ]); 
     }
 
@@ -30,6 +27,7 @@ class PaymentController extends Controller {
         if ($request->hasFile('proof_path')) {
             $data['proof_path'] = $request->file('proof_path')->store('payments','public');
         }
+        $data['confirmed_at'] = $data['status'] === 'confirmed' ? now() : null;
         Payment::create($data);
         return redirect()->route('payments.index')->with('success','Payment recorded.');
     }
@@ -51,6 +49,7 @@ class PaymentController extends Controller {
             if ($payment->proof_path) Storage::disk('public')->delete($payment->proof_path);
             $data['proof_path'] = $request->file('proof_path')->store('payments','public');
         }
+        $data['confirmed_at'] = $data['status'] === 'confirmed' ? ($payment->confirmed_at ?? now()) : null;
         $payment->update($data);
         return redirect()->route('payments.index')->with('success','Payment updated.');
     }

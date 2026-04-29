@@ -25,6 +25,15 @@ class DatabaseSeeder extends Seeder
             ]
         );
 
+        User::firstOrCreate(
+            ['email' => 'admin@example.com'],
+            [
+                'name' => 'Admin User',
+                'password' => bcrypt('password'),
+                'role' => 'admin',
+            ]
+        );
+
         // Seed watches, transactions, payments for UI samples
         $this->call([
             \Database\Seeders\WatchSeeder::class,

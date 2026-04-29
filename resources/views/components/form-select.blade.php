@@ -1,26 +1,25 @@
-@props(['options', 'value', 'label', 'placeholder' => 'Select...', 'required' => false, 'disabled' => false])
+@props(['options', 'value', 'label' => null, 'placeholder' => 'Select...', 'required' => false, 'disabled' => false, 'class' => ''])
 
-<div style="margin-bottom: 1rem;">
+<div class="form-group">
     @if ($label)
-        <label style="display: block; margin-bottom: 0.5rem; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--gray-mid);">
+        <label class="form-label">
             {{ $label }}
-            @if ($required) <span style="color: #d32f2f;">*</span> @endif
+            @if ($required) <span class="text-red-600">*</span> @endif
         </label>
     @endif
     <select 
         {{ $required ? 'required' : '' }}
         {{ $disabled ? 'disabled' : '' }}
-        {{ $attributes->merge(['class' => 'form-select', 'name' => $name]) }}
-        style="width: 100%; padding: 0.625rem; border: 1px solid var(--gray-light); border-radius: 3px; font-family: inherit; font-size: inherit;"
+        {{ $attributes->merge(['class' => 'form-select ' . $class, 'name' => $attributes->get('name')]) }}
     >
         <option value="">{{ $placeholder }}</option>
         @foreach ($options as $optionValue => $optionLabel)
-            <option value="{{ $optionValue }}" {{ old($name, $value) == $optionValue ? 'selected' : '' }}>
+            <option value="{{ $optionValue }}" {{ old($attributes->get('name'), $value) == $optionValue ? 'selected' : '' }}>
                 {{ $optionLabel }}
             </option>
         @endforeach
     </select>
-    @error($name)
-        <small style="color: #d32f2f; display: block; margin-top: 0.25rem;">{{ $message }}</small>
+    @error($attributes->get('name'))
+        <div class="form-error">{{ $message }}</div>
     @enderror
 </div>

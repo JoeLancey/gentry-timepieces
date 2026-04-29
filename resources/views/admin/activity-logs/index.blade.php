@@ -5,107 +5,127 @@
 
     <x-alert />
 
-    <div class="card" style="padding: 0; margin-bottom: 1.5rem;">
-        <!-- Filters -->
-        <div style="padding: 1.5rem; border-bottom: 1px solid var(--gray-light);">
-            <form method="GET" style="display: grid; gap: 1rem;">
-                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 1rem;">
-                    <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.875rem;">Model Type</label>
-                        <select name="model_type" style="width: 100%; padding: 0.625rem; border: 1px solid var(--gray-light); border-radius: 3px; box-sizing: border-box;">
-                            <option value="">All Models</option>
-                            @foreach($modelTypes as $type)
-                                <option value="{{ $type }}" {{ request('model_type') == $type ? 'selected' : '' }}>{{ $type }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                    <div>
-                        <label style="display: block; margin-bottom: 0.5rem; font-weight: 500; font-size: 0.875rem;">Action</label>
-                        <select name="action" style="width: 100%; padding: 0.625rem; border: 1px solid var(--gray-light); border-radius: 3px; box-sizing: border-box;">
-                            <option value="">All Actions</option>
-                            @foreach($actions as $action)
-                                <option value="{{ $action }}" {{ request('action') == $action ? 'selected' : '' }}>{{ ucfirst(str_replace('_', ' ', $action)) }}</option>
-                            @endforeach
-                        </select>
-                    </div>
-                </div>
+    <!-- Filters -->
+    <div class="filter-section">
+        <form method="GET" class="filter-form">
+            <div class="filter-group">
+                <label class="form-label">Model Type</label>
+                <select name="model_type" class="form-select">
+                    <option value="">All Models</option>
+                    @foreach($modelTypes as $type)
+                        <option value="{{ $type }}" {{ request('model_type') == $type ? 'selected' : '' }}>
+                            {{ $type }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-                <div style="display: flex; gap: 1rem;">
-                    <button type="submit" class="btn btn-secondary" style="flex: 1; min-width: 150px;">Filter</button>
-                    <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary" style="flex: 1; min-width: 150px; text-align: center; text-decoration: none; padding: 0.625rem;">Clear</a>
-                </div>
-            </form>
-        </div>
+            <div class="filter-group">
+                <label class="form-label">Action</label>
+                <select name="action" class="form-select">
+                    <option value="">All Actions</option>
+                    @foreach($actions as $action)
+                        <option value="{{ $action }}" {{ request('action') == $action ? 'selected' : '' }}>
+                            {{ ucfirst(str_replace('_', ' ', $action)) }}
+                        </option>
+                    @endforeach
+                </select>
+            </div>
 
-        <!-- Logs Table -->
-        @if($logs->count())
-        <div class="table-wrapper">
-            <table class="gt-table">
-                <thead><tr>
-                    <th>User</th>
-                    <th>Action</th>
-                    <th>Model</th>
-                    <th>Description</th>
-                    <th>Timestamp</th>
-                    <th>Actions</th>
-                </tr></thead>
-                <tbody>
-                @foreach($logs as $log)
-                <tr>
-                    <td>
-                        <strong>{{ $log->user->name ?? 'System' }}</strong>
-                        <p style="margin: 0.25rem 0 0 0; font-size: 0.8125rem; color: var(--gray-mid);">{{ $log->user->email ?? '—' }}</p>
-                    </td>
-                    <td>
-                        <span style="display: inline-block; padding: 0.25rem 0.75rem; border-radius: 3px; font-size: 0.75rem; font-weight: 600;
-                            background: {{ 
-                                match($log->action) {
-                                    'created' => '#e8f5e9',
-                                    'updated' => '#e3f2fd',
-                                    'deleted' => '#ffebee',
-                                    'restored' => '#f3e5f5',
-                                    'approved' => '#c8e6c9',
-                                    default => '#f5f5f5'
-                                }
-                            }};
-                            color: {{
-                                match($log->action) {
-                                    'created' => '#2e7d32',
-                                    'updated' => '#1565c0',
-                                    'deleted' => '#c62828',
-                                    'restored' => '#6a1b9a',
-                                    'approved' => '#1b5e20',
-                                    default => '#424242'
-                                }
-                            }};">
-                            {{ ucfirst(str_replace('_', ' ', $log->action)) }}
-                        </span>
-                    </td>
-                    <td>
-                        <strong>{{ $log->model_type }}</strong>
-                        <p style="margin: 0.25rem 0 0 0; font-size: 0.8125rem; color: var(--gray-mid);">ID: #{{ $log->model_id }}</p>
-                    </td>
-                    <td style="max-width: 300px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
-                        {{ $log->description ?? '—' }}
-                    </td>
-                    <td style="color: var(--gray-mid); font-size: 0.875rem;">
-                        {{ $log->created_at->format('M d, Y H:i') }}
-                    </td>
-                    <td>
-                        <a href="{{ route('activity-logs.show', $log) }}" class="btn-link">Details</a>
-                    </td>
-                </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
-        <div style="padding: 1rem;">
-            {{ $logs->links() }}
-        </div>
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 4a1 1 0 011-1h16a1 1 0 011 1v2.586a1 1 0 01-.293.707l-6.414 6.414a1 1 0 00-.293.707V17l-4 4v-6.586a1 1 0 00-.293-.707L3.293 7.293A1 1 0 013 6.586V4z"/>
+                    </svg>
+                    Filter
+                </button>
+                <a href="{{ route('activity-logs.index') }}" class="btn btn-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
+
+    <!-- Logs Table -->
+    @if($logs->count())
+        <div class="card overflow-hidden p-0">
+            <div class="table-container border-0 rounded-none">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>User</th>
+                            <th>Action</th>
+                            <th>Model</th>
+                            <th>Description</th>
+                            <th>Timestamp</th>
+                            <th class="text-right">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($logs as $log)
+                        <tr class="group hover:bg-gray-50 transition-colors">
+                            <td>
+                                <div class="font-semibold text-gray-900">{{ $log->user->name ?? 'System' }}</div>
+                                <div class="text-sm text-gray-500">{{ $log->user->email ?? '—' }}</div>
+                            </td>
+                            <td>
+                                <span class="badge"
+                                      style="background: {{
+                                          match($log->action) {
+                                              'created' => '#dcfce7',
+                                              'updated' => '#dbeafe',
+                                              'deleted' => '#fee2e2',
+                                              'restored' => '#f3e8ff',
+                                              'approved' => '#bbf7d0',
+                                              default => '#f3f4f6'
+                                          }
+                                      }};
+                                      color: {{
+                                          match($log->action) {
+                                              'created' => '#166534',
+                                              'updated' => '#1d4ed8',
+                                              'deleted' => '#991b1b',
+                                              'restored' => '#7c3aed',
+                                              'approved' => '#166534',
+                                              default => '#424242'
+                                          }
+                                      }};">
+                                    {{ ucfirst(str_replace('_', ' ', $log->action)) }}
+                                </span>
+                            </td>
+                            <td>
+                                <div class="font-semibold text-gray-900">{{ class_basename($log->model_type) }}</div>
+                                <div class="text-sm text-gray-500">ID: #{{ $log->model_id }}</div>
+                            </td>
+                            <td class="max-w-xs truncate text-gray-600">
+                                {{ $log->description ?? '—' }}
+                            </td>
+                            <td class="text-gray-500 text-sm">
+                                {{ $log->created_at->format('M d, Y H:i') }}
+                            </td>
+                            <td class="text-right">
+                                <a href="{{ route('activity-logs.show', $log) }}" class="btn btn-secondary btn-sm">
+                                    Details
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            <div class="px-6 py-4 border-t border-gray-200 bg-gray-50">
+                {{ $logs->links() }}
+            </div>
         @else
-        <div style="padding: 3rem; text-align: center; color: var(--gray-mid);">
-            <p>No activity logs found.</p>
-        </div>
+            <div class="card">
+                <div class="empty-state">
+                    <div class="empty-icon">
+                        <svg class="w-16 h-16 mx-auto text-gray-300" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                        </svg>
+                    </div>
+                    <h4 class="empty-title">No activity logs found</h4>
+                    <p class="empty-text">System activity will appear here.</p>
+                </div>
+            </div>
         @endif
     </div>
 </x-app-layout>

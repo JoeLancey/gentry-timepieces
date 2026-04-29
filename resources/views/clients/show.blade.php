@@ -1,128 +1,114 @@
 <x-app-layout header="Client Profile">
     <x-slot:actions>
         <a href="{{ route('clients.edit', $client) }}" class="btn btn-secondary">Edit</a>
-        <a href="{{ route('clients.index') }}" class="btn btn-secondary">Back to Clients</a>
+        <a href="{{ route('clients.index') }}" class="btn btn-secondary">← Back to Clients</a>
     </x-slot:actions>
 
     <x-alert />
 
-    <div style="display: grid; template-columns: 1fr 1fr; gap: 1.5rem; margin-bottom: 1.5rem;">
+    <!-- Client Info & Key Metrics -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 mb-8">
         <!-- Client Info Card -->
-        <div class="card">
-            <div style="padding: 0; border-bottom: 1px solid var(--gray-light);">
-                <div style="padding: 1.5rem;">
-                    <h2 style="margin: 0 0 0.5rem 0; font-size: 1.5rem;">{{ $client->full_name }}</h2>
-                    <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem;">Client ID: #{{ $client->id }}</p>
+        <div class="lg:col-span-2 card p-0 overflow-hidden">
+            <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+                <div class="flex items-center justify-between">
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-900 tracking-tight">{{ $client->full_name }}</h2>
+                        <p class="text-sm text-gray-500 mt-0.5">Client ID: #{{ $client->id }}</p>
+                    </div>
                 </div>
             </div>
-            <div style="padding: 1.5rem;">
-                <div style="display: grid; gap: 1rem; font-size: 0.875rem;">
-                    <div>
-                        <span style="color: var(--gray-mid); font-weight: 500;">Email</span>
-                        <p style="margin: 0.25rem 0 0 0;">{{ $client->email ?? '—' }}</p>
+            <div class="p-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div class="detail-box">
+                        <span class="detail-label">Email</span>
+                        <span class="detail-value">{{ $client->email ?? '—' }}</span>
                     </div>
-                    <div>
-                        <span style="color: var(--gray-mid); font-weight: 500;">Phone</span>
-                        <p style="margin: 0.25rem 0 0 0;">{{ $client->phone }}</p>
+                    <div class="detail-box">
+                        <span class="detail-label">Phone</span>
+                        <span class="detail-value">{{ $client->phone }}</span>
                     </div>
-                    <div>
-                        <span style="color: var(--gray-mid); font-weight: 500;">Address</span>
-                        <p style="margin: 0.25rem 0 0 0;">{{ $client->address ?? '—' }}</p>
+                    <div class="detail-box md:col-span-2">
+                        <span class="detail-label">Address</span>
+                        <span class="detail-value">{{ $client->address ?? '—' }}</span>
                     </div>
-                    <div>
-                        <span style="color: var(--gray-mid); font-weight: 500;">Joined</span>
-                        <p style="margin: 0.25rem 0 0 0;">{{ $client->created_at->format('M d, Y') }}</p>
+                    <div class="detail-box">
+                        <span class="detail-label">Joined</span>
+                        <span class="detail-value">{{ $client->created_at->format('M d, Y') }}</span>
                     </div>
                     @if($client->notes)
-                    <div>
-                        <span style="color: var(--gray-mid); font-weight: 500;">Notes</span>
-                        <p style="margin: 0.25rem 0 0 0; font-size: 0.8125rem;">{{ $client->notes }}</p>
+                    <div class="detail-box md:col-span-2">
+                        <span class="detail-label">Notes</span>
+                        <span class="detail-value text-gray-600">{{ $client->notes }}</span>
                     </div>
                     @endif
                 </div>
             </div>
         </div>
 
-        <!-- Key Metrics -->
-        <div style="display: grid; gap: 1rem;">
-            <!-- Total Spent -->
-            <div class="card" style="padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Total Spent</p>
-                        <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700;">${{ number_format($totalSpent, 2) }}</h3>
-                    </div>
-                </div>
+        <!-- Metrics -->
+        <div class="space-y-4">
+            <div class="stat-card">
+                <p class="stat-label">Total Spent</p>
+                <p class="stat-value">${{ number_format($totalSpent, 2) }}</p>
             </div>
-
-            <!-- Outstanding Balance -->
-            <div class="card" style="padding: 1.5rem; border-left: 4px solid {{ $outstandingBalance > 0 ? '#ff9800' : '#4caf50' }};">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Outstanding Balance</p>
-                        <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700; color: {{ $outstandingBalance > 0 ? '#d32f2f' : '#4caf50' }};">
-                            {{ $outstandingBalance > 0 ? '—' : '+' }}${{ number_format(abs($outstandingBalance), 2) }}
-                        </h3>
-                    </div>
-                </div>
+            <div class="card p-5" style="border-left: 4px solid {{ $outstandingBalance > 0 ? '#dc2626' : '#16a34a' }};">
+                <p class="text-sm text-gray-500 mb-2">Outstanding Balance</p>
+                <p class="text-2xl font-bold" style="color: {{ $outstandingBalance > 0 ? '#dc2626' : '#16a34a' }};">
+                    {{ $outstandingBalance > 0 ? '–' : '+' }}${{ number_format(abs($outstandingBalance), 2) }}
+                </p>
             </div>
-
-            <!-- Average Transaction -->
-            <div class="card" style="padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Avg. Per Transaction</p>
-                        <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700;">${{ number_format($averageSpend, 2) }}</h3>
-                    </div>
-                </div>
+            <div class="stat-card">
+                <p class="stat-label">Average Per Transaction</p>
+                <p class="stat-value" style="font-size: 1.75rem;">${{ number_format($averageSpend, 2) }}</p>
             </div>
-
-            <!-- Transaction Count -->
-            <div class="card" style="padding: 1.5rem;">
-                <div style="display: flex; justify-content: space-between; align-items: start;">
-                    <div>
-                        <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Transactions</p>
-                        <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700;">{{ $totalTransactions }}</h3>
-                    </div>
-                </div>
+            <div class="stat-card">
+                <p class="stat-label">Transactions</p>
+                <p class="stat-value">{{ $totalTransactions }}</p>
             </div>
         </div>
     </div>
 
     <!-- Recent Transactions -->
-    <div class="card" style="padding: 0;">
-        <div style="padding: 1.5rem; border-bottom: 1px solid var(--gray-light);">
-            <h3 style="margin: 0; font-size: 1rem; font-weight: 600;">Recent Transactions</h3>
+    <div class="card overflow-hidden p-0">
+        <div class="bg-gray-50 px-6 py-4 border-b border-gray-200">
+            <h3 class="text-lg font-bold text-gray-900 tracking-tight">Recent Transactions</h3>
         </div>
         @if($recentTransactions->count())
-        <div class="table-wrapper">
-            <table class="gt-table">
-                <thead><tr>
-                    <th>Date</th>
-                    <th>Type</th>
-                    <th>Amount</th>
-                    <th>Status</th>
-                    <th>Action</th>
-                </tr></thead>
-                <tbody>
-                @foreach($recentTransactions as $transaction)
-                <tr>
-                    <td>{{ $transaction->created_at->format('M d, Y') }}</td>
-                    <td><span style="text-transform: capitalize;">{{ $transaction->type }}</span></td>
-                    <td>${{ number_format($transaction->total_amount, 2) }}</td>
-                    <td><x-status-badge :status="$transaction->status" /></td>
-                    <td>
-                        <a href="{{ route('transactions.show', $transaction) }}" class="btn-link">View</a>
-                    </td>
-                </tr>
-                @endforeach
-                </tbody>
-            </table>
-        </div>
+            <div class="table-container border-0 rounded-none">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Type</th>
+                            <th>Amount</th>
+                            <th>Status</th>
+                            <th class="text-right">Action</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($recentTransactions as $transaction)
+                        <tr class="group hover:bg-gray-50 transition-colors">
+                            <td class="text-gray-500 text-sm">{{ $transaction->created_at->format('M d, Y') }}</td>
+                            <td class="capitalize text-gray-700">{{ str_replace('_', ' ', $transaction->type) }}</td>
+                            <td class="font-semibold text-gray-900">
+                                ${{ number_format($transaction->total_amount, 2) }}
+                            </td>
+                            <td><x-status-badge :status="$transaction->status" /></td>
+                            <td class="text-right">
+                                <a href="{{ route('transactions.show', $transaction) }}" class="btn btn-ghost text-sm">
+                                    View
+                                </a>
+                            </td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
         @else
-        <div style="padding: 2rem; text-align: center; color: var(--gray-mid); font-size: 0.875rem;">
-            No transactions yet.
-        </div>
+            <div class="empty-state">
+                <p class="text-gray-500">No transactions yet.</p>
+            </div>
         @endif
     </div>
 </x-app-layout>
