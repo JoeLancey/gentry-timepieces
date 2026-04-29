@@ -1,3 +1,584 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* ═══════════════════════════════════════════════════════════════════════════ */
+/* MINIMALIST BLACK & WHITE DESIGN */
+/* ═══════════════════════════════════════════════════════════════════════════ */
+
+:root {
+    --black: #000000;
+    --white: #ffffff;
+    --gray-1: #f5f5f5;
+    --gray-2: #eeeeee;
+    --gray-3: #d0d0d0;
+    --gray-4: #808080;
+    --text: #000000;
+    --border: #cccccc;
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* STATISTICS CARDS - Minimalist */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.grid.grid-cols-4 {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.stat-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    border-top: 3px solid var(--black);
+    padding: 2rem;
+    box-shadow: none;
+    transition: all 0.3s ease;
+    position: relative;
+}
+
+.stat-card:hover {
+    border-top: 4px solid var(--black);
+    padding-top: 1.875rem;
+}
+
+.stat-value {
+    font-size: 2.2rem;
+    font-weight: 700;
+    color: var(--black);
+    margin: 0.75rem 0 0 0;
+    letter-spacing: -0.02em;
+}
+
+.stat-label {
+    font-size: 0.75rem;
+    color: var(--gray-4);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    margin: 0;
+    font-weight: 600;
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* FILTER SECTION */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.filter-section {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.filter-form {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr auto auto;
+    gap: 1rem;
+    align-items: flex-end;
+}
+
+.filter-group {
+    display: flex;
+    flex-direction: column;
+}
+
+.filter-input,
+.filter-select {
+    width: 100%;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background: var(--white);
+}
+
+.filter-input:focus,
+.filter-select:focus {
+    outline: none;
+    border-color: var(--black);
+    box-shadow: none;
+}
+
+.filter-input::placeholder {
+    color: var(--gray-4);
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* MODERN TABLE STYLING - MINIMAL */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.modern-table-wrapper {
+    background: var(--white);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: none;
+    padding: 0;
+}
+
+.modern-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.modern-table thead {
+    background: var(--gray-1);
+    border-bottom: 2px solid var(--black);
+}
+
+.modern-table thead th {
+    padding: 1.25rem;
+    text-align: left;
+    font-size: 0.75rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    white-space: nowrap;
+}
+
+.modern-table tbody tr {
+    border-bottom: 1px solid var(--border);
+    transition: background 0.15s ease;
+}
+
+.modern-table tbody tr:hover {
+    background: var(--gray-1);
+}
+
+.modern-table tbody tr:last-child {
+    border-bottom: none;
+}
+
+.modern-table td {
+    padding: 1.25rem;
+    font-size: 0.95rem;
+    color: var(--text);
+    vertical-align: middle;
+}
+
+.invoice-cell {
+    font-family: 'Courier New', monospace;
+}
+
+.invoice-badge {
+    background: var(--gray-1);
+    color: var(--black);
+    padding: 0.4rem 0.8rem;
+    border: 1px solid var(--black);
+    font-weight: 600;
+    font-size: 0.9rem;
+}
+
+.watch-info strong {
+    display: block;
+    margin-bottom: 0.25rem;
+    font-weight: 600;
+}
+
+.watch-info span.text-muted {
+    color: var(--gray-4);
+    font-size: 0.85rem;
+}
+
+.amount-cell {
+    color: var(--black);
+    font-weight: 700;
+}
+
+.date-cell {
+    color: var(--gray-4);
+    font-size: 0.9rem;
+}
+
+.action-cell {
+    text-align: right;
+}
+
+.action-buttons {
+    display: flex;
+    gap: 0.5rem;
+    justify-content: flex-end;
+}
+
+.btn-ghost {
+    background: transparent;
+    color: var(--gray-4);
+    border: none;
+    padding: 0.5rem 0.75rem;
+    cursor: pointer;
+    transition: all 0.2s;
+    font-size: 1rem;
+}
+
+.btn-ghost:hover {
+    background: var(--gray-1);
+    color: var(--black);
+}
+
+.btn-ghost.text-danger {
+    color: var(--black);
+}
+
+.btn-ghost.text-danger:hover {
+    background: var(--gray-2);
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* PAGINATION */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.pagination-wrapper {
+    padding: 1.5rem;
+    text-align: center;
+    background: var(--white);
+    border-top: 1px solid var(--border);
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* EMPTY STATE */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.empty-state {
+    background: var(--white);
+    border: 1px dashed var(--border);
+    padding: 3rem;
+    text-align: center;
+}
+
+.empty-icon {
+    font-size: 3.5rem;
+    margin-bottom: 1rem;
+}
+
+.empty-title {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+
+.empty-text {
+    color: var(--gray-4);
+    margin-bottom: 1.5rem;
+    font-size: 0.95rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* BUTTON STYLES - Minimalist */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.btn {
+    padding: 0.65rem 1.25rem;
+    font-weight: 600;
+    font-size: 0.85rem;
+    text-decoration: none;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: 1px solid transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    letter-spacing: 0.05em;
+    text-transform: uppercase;
+}
+
+.btn-primary {
+    background: var(--black);
+    color: var(--white);
+    border: 1px solid var(--black);
+}
+
+.btn-primary:hover {
+    background: var(--white);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.btn-secondary {
+    background: var(--white);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.btn-secondary:hover {
+    background: var(--black);
+    color: var(--white);
+    border: 1px solid var(--black);
+}
+
+.btn-danger {
+    background: var(--white);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.btn-danger:hover {
+    background: var(--gray-1);
+    border: 1px solid var(--black);
+}
+
+.btn-sm {
+    padding: 0.4rem 0.75rem;
+    font-size: 0.8rem;
+}
+
+.btn-lg {
+    padding: 0.85rem 1.75rem;
+    font-size: 0.95rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* FORM STYLES - Minimalist */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.form-control {
+    width: 100%;
+    padding: 0.85rem 1rem;
+    border: 1px solid var(--border);
+    font-family: inherit;
+    font-size: 0.95rem;
+    transition: all 0.2s;
+    background: var(--white);
+}
+
+.form-control:focus {
+    outline: none;
+    border-color: var(--black);
+    box-shadow: none;
+}
+
+.form-label {
+    display: block;
+    font-weight: 600;
+    margin-bottom: 0.5rem;
+    color: var(--text);
+    font-size: 0.9rem;
+    letter-spacing: 0.05em;
+}
+
+.form-error {
+    color: var(--black);
+    font-size: 0.85rem;
+    margin-top: 0.35rem;
+}
+
+.form-grid-2 {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1.5rem;
+}
+
+@media (max-width: 768px) {
+    .form-grid-2 {
+        grid-template-columns: 1fr;
+    }
+
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* CARD STYLING */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: none;
+}
+
+.card.modern-table-wrapper {
+    padding: 0;
+}
+
+.card:not(.modern-table-wrapper) {
+    padding: 1.75rem;
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* DETAIL & FORM LAYOUT — centralized from transaction views */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.detail-container, .form-container {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    gap: 2rem;
+    margin-bottom: 2rem;
+}
+
+.detail-main, .form-main { min-width: 0; }
+
+.detail-card, .form-card {
+    background: var(--white);
+    border: 1px solid var(--border);
+    padding: 2rem;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 2rem;
+    padding-bottom: 1.5rem;
+    border-bottom: 1px solid var(--gray-1);
+}
+
+.invoice-number {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--text);
+    margin: 0;
+    font-family: 'Courier New', monospace;
+    letter-spacing: -0.02em;
+}
+
+.invoice-date { font-size: 0.85rem; color: var(--gray-4); margin-top: 0.25rem; }
+
+.transaction-badge { padding: 0.5rem 1rem; font-size: 0.85rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; border: 1px solid var(--black); }
+
+.detail-grid, .form-grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 1.5rem; margin-bottom: 2rem; }
+
+.detail-box { padding: 1.25rem; background: var(--gray-1); border: 1px solid var(--gray-2); border-left: 3px solid var(--black); }
+
+.detail-label { display: block; font-size: 0.75rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray-4); margin-bottom: 0.5rem; font-weight: 600; }
+
+.detail-value { font-size: 1.1rem; font-weight: 700; color: var(--text); margin: 0 0 0.4rem 0; }
+
+.notes-section { margin: 1.5rem 0; padding: 1.25rem; background: var(--gray-1); border: 1px solid var(--gray-2); border-left: 3px solid var(--black); }
+
+.notes-content { margin: 0.5rem 0 0 0; color: var(--text); line-height: 1.6; }
+
+.detail-actions { display: flex; gap: 1rem; margin-top: 1.5rem; padding-top: 1.5rem; border-top: 1px solid var(--gray-1); }
+
+.detail-sidebar, .form-sidebar { display: flex; flex-direction: column; gap: 1.5rem; }
+
+.sidebar-widget, .summary-card { background: var(--white); border: 1px solid var(--border); padding: 1.5rem; position: sticky; top: 100px; }
+
+.sidebar-widget h3, .summary-card h3 { font-size: 0.9rem; font-weight: 700; margin-bottom: 1rem; color: var(--text); }
+
+.widget-item, .summary-item { display: flex; justify-content: space-between; align-items: center; font-size: 0.85rem; margin-bottom: 0.75rem; }
+.widget-item span, .summary-item span { color: var(--gray-4); }
+.widget-item strong, .summary-item strong { font-weight: 700; color: var(--text); }
+.widget-divider, .summary-divider { height: 1px; background: var(--gray-2); margin: 0.75rem 0; }
+
+@media (max-width: 768px) {
+    .detail-container, .form-container { grid-template-columns: 1fr; }
+    .detail-grid, .form-grid-2 { grid-template-columns: 1fr; }
+    .detail-actions { flex-direction: column; }
+}
+
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* BADGE STYLES - Minimalist */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.badge {
+    display: inline-block;
+    padding: 0.35rem 0.85rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    border: 1px solid var(--black);
+    background: var(--white);
+    color: var(--black);
+}
+
+.badge-sale {
+    background: var(--white);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.badge-trade_in {
+    background: var(--gray-1);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.badge-available {
+    background: var(--white);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.badge-sold {
+    background: var(--gray-1);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.badge-active {
+    background: var(--white);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+.badge-pending {
+    background: var(--gray-1);
+    color: var(--black);
+    border: 1px solid var(--black);
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* ALERT STYLES */
+/* ════════════════════════════════════════════════════════════════════ */
+
+.alert {
+    padding: 1rem;
+    border: 1px solid var(--border);
+    border-left: 4px solid var(--black);
+    margin-bottom: 1.5rem;
+    background: var(--white);
+}
+
+.alert-success {
+    background: var(--white);
+    border-color: var(--border);
+    border-left-color: var(--black);
+    color: var(--text);
+}
+
+.alert-error {
+    background: var(--white);
+    border-color: var(--border);
+    border-left-color: var(--black);
+    color: var(--text);
+}
+
+.alert-warning {
+    background: var(--white);
+    border-color: var(--border);
+    border-left-color: var(--black);
+    color: var(--text);
+}
+
+/* ════════════════════════════════════════════════════════════════════ */
+/* RESPONSIVE IMPROVEMENTS */
+/* ════════════════════════════════════════════════════════════════════ */
+
+@media (max-width: 768px) {
+    .grid.grid-cols-4 {
+        grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    }
+
+    .modern-table {
+        font-size: 0.85rem;
+    }
+
+    .modern-table th,
+    .modern-table td {
+        padding: 0.75rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+    }
+
+    .filter-form {
+        grid-template-columns: 1fr;
+    }
+}

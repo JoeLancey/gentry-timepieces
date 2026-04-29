@@ -42,13 +42,15 @@
                         ${{ number_format($total, 2) }}
                     </td>
                     <td style="color: var(--gray-mid);">{{ $client->created_at->format('M d, Y') }}</td>
-                    <td>
-                        <a href="{{ route('clients.show', $client) }}" class="btn-link">View Profile</a>
-                        <a href="{{ route('clients.edit', $client) }}" class="btn-link">Edit</a>
-                        <form method="POST" action="{{ route('clients.destroy', $client) }}" style="display: inline;" onsubmit="return confirm('Delete this client?')">
-                            @csrf @method('DELETE')
-                            <button type="submit" class="btn-link" style="color: #d32f2f;">Delete</button>
-                        </form>
+                    <td style="text-align:right;">
+                        <div style="display:flex;gap:0.5rem;justify-content:flex-end;flex-wrap:wrap;">
+                            <a href="{{ route('clients.show', $client) }}" class="btn btn-secondary btn-sm">View Profile</a>
+                            <a href="{{ route('clients.edit', $client) }}" class="btn btn-secondary btn-sm">Edit</a>
+                            <form method="POST" action="{{ route('clients.destroy', $client) }}" onsubmit="return confirm('Delete this client?')" style="display:inline;">
+                                @csrf @method('DELETE')
+                                <button type="submit" class="btn btn-danger btn-sm">Delete</button>
+                            </form>
+                        </div>
                     </td>
                 </tr>
                 @endforeach

@@ -73,12 +73,24 @@ class DashboardController extends Controller
         // Client Stats
         $totalClients = Client::count();
 
-        // Financial Stats
-        $totalSales = Transaction::sales()->sum('amount');
+        // Financial Stats - Enhanced with Transaction Data
+        $totalTransactions = Transaction::count();
+        $totalSales = Transaction::where('type', 'sale')->sum('amount');
+        $totalTradeIns = Transaction::where('type', 'trade_in')->sum('amount');
         $totalCost = Watch::sum('cost_price');
         $totalRevenue = Payment::confirmed()->sum('amount');
         $profitMargin = $totalRevenue - $totalCost;
         $averageProfit = $totalWatches > 0 ? $profitMargin / $totalWatches : 0;
+        
+        // Transaction monthly trend
+        $transactionsByMonth = Transaction::selectRaw('MONTH(created_at) as month, COUNT(*) as count, SUM(amount) as total')
+            ->whereYear('created_at', now()->year)
+            ->groupBy('month')
+            ->orderBy('month')
+            ->get();
+        
+        // Recent transactions for dashboard
+        $recentTransactionsData = Transaction::with(['watch', 'client', 'staff'])->latest()->take(10)->get();
 
         // Consignment Stats
         $activeConsignments = Consignment::active()->count();
@@ -91,7 +103,7 @@ class DashboardController extends Controller
 
         // Recent Activity + Top Conditions (guarded)
         try {
-            $recentTransactions = Transaction::with(['watch', 'client', 'staff'])->latest()->take(5)->get();
+            $recentTransactions = $recentTransactionsData;
             $recentAppraisals = Appraisal::with(['watch', 'client', 'appraiser'])->latest()->take(5)->get();
 
             // Top Conditions: aggregate in PHP to avoid SQL mode/group by compatibility issues
@@ -116,7 +128,9 @@ class DashboardController extends Controller
                 'soldWatches',
                 'consignedWatches',
                 'totalClients',
+                'totalTransactions',
                 'totalSales',
+                'totalTradeIns',
                 'totalCost',
                 'totalRevenue',
                 'profitMargin',
@@ -128,7 +142,8 @@ class DashboardController extends Controller
                 'completedAppraisals',
                 'recentTransactions',
                 'recentAppraisals',
-                'watchsByCondition'
+                'watchsByCondition',
+                'transactionsByMonth'
             ))->with('db_error', $dbError);
         }
 
@@ -138,7 +153,9 @@ class DashboardController extends Controller
             'soldWatches',
             'consignedWatches',
             'totalClients',
+            'totalTransactions',
             'totalSales',
+            'totalTradeIns',
             'totalCost',
             'totalRevenue',
             'profitMargin',
@@ -150,7 +167,8 @@ class DashboardController extends Controller
             'completedAppraisals',
             'recentTransactions',
             'recentAppraisals',
-            'watchsByCondition'
+            'watchsByCondition',
+            'transactionsByMonth'
         ));
     }
 }

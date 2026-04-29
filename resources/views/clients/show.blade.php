@@ -52,7 +52,6 @@
                         <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Total Spent</p>
                         <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700;">${{ number_format($totalSpent, 2) }}</h3>
                     </div>
-                    <span style="font-size: 2rem; opacity: 0.3;">💰</span>
                 </div>
             </div>
 
@@ -65,7 +64,6 @@
                             {{ $outstandingBalance > 0 ? '—' : '+' }}${{ number_format(abs($outstandingBalance), 2) }}
                         </h3>
                     </div>
-                    <span style="font-size: 2rem; opacity: 0.3;">⚠️</span>
                 </div>
             </div>
 
@@ -76,7 +74,6 @@
                         <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Avg. Per Transaction</p>
                         <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700;">${{ number_format($averageSpend, 2) }}</h3>
                     </div>
-                    <span style="font-size: 2rem; opacity: 0.3;">📊</span>
                 </div>
             </div>
 
@@ -87,7 +84,6 @@
                         <p style="margin: 0; color: var(--gray-mid); font-size: 0.875rem; font-weight: 500;">Transactions</p>
                         <h3 style="margin: 0.5rem 0 0 0; font-size: 1.75rem; font-weight: 700;">{{ $totalTransactions }}</h3>
                     </div>
-                    <span style="font-size: 2rem; opacity: 0.3;">📋</span>
                 </div>
             </div>
         </div>

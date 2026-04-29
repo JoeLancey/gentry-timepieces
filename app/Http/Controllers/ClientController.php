@@ -42,7 +42,7 @@ class ClientController extends Controller
     {
         // Load insights
         $totalTransactions = $client->transactions()->count();
-        $totalSpent = $client->transactions()->sum('total_amount');
+        $totalSpent = $client->transactions()->sum('amount');
         
         // Calculate total paid through transactions' payments
         $totalPaid = $client->transactions()

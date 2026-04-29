@@ -10,12 +10,32 @@ use Illuminate\Support\Str;
 
 class TransactionController extends Controller {
     public function index() { 
-        $transactions = Transaction::with(['watch','client','staff'])
-            ->when(request('type'), fn($q) => $q->where('type', request('type')))
-            ->when(request('search'), fn($q) => $q->where('invoice_number', 'like', "%{request('search')}%"))
-            ->latest()
-            ->paginate(15);
-        return view('transactions.index', compact('transactions')); 
+        $query = Transaction::with(['watch','client','staff']);
+        
+        // Apply filters
+        if(request('type')) $query->where('type', request('type'));
+        if(request('search')) {
+            $search = request('search');
+            $query->where(function($q) use ($search) {
+                $q->where('invoice_number', 'like', "%{$search}%")
+                  ->orWhereHas('watch', fn($q) => $q->where('brand', 'like', "%{$search}%"))
+                  ->orWhereHas('client', fn($q) => $q->where('first_name', 'like', "%{$search}%")->orWhere('last_name', 'like', "%{$search}%"));
+            });
+        }
+        if(request('date_from')) $query->whereDate('created_at', '>=', request('date_from'));
+        if(request('date_to')) $query->whereDate('created_at', '<=', request('date_to'));
+        
+        $transactions = $query->latest()->paginate(20);
+        
+        // Calculate statistics
+        $stats = [
+            'total_transactions' => Transaction::count(),
+            'total_sales' => Transaction::where('type', 'sale')->sum('amount'),
+            'total_trades' => Transaction::where('type', 'trade_in')->sum('amount'),
+            'this_month' => Transaction::whereMonth('created_at', now()->month)->count(),
+        ];
+        
+        return view('transactions.index', compact('transactions', 'stats')); 
     }
     public function create() { 
         return view('transactions.create', ['watches'=>Watch::available()->get(),'clients'=>Client::all(),'staff'=>User::where('role','staff')->get()]); 

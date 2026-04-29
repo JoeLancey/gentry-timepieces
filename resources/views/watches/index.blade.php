@@ -79,7 +79,7 @@
                     <a href="{{ route('watches.index') }}" class="btn btn-secondary" style="flex: 1; min-width: 150px; text-align: center; text-decoration: none; padding: 0.625rem;">Clear Filters</a>
                     
                     <!-- Save filter modal trigger -->
-                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('saveFilterModal').style.display='flex'" style="flex: 1; min-width: 150px;">💾 Save Filter</button>
+                    <button type="button" class="btn btn-secondary" onclick="document.getElementById('saveFilterModal').style.display='flex'" style="flex: 1; min-width: 150px;">Save Filter</button>
                 </div>
             </form>
 
