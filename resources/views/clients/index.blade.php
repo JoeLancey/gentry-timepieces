@@ -27,6 +27,16 @@
         </form>
     </div>
 
+    <div class="card p-5 mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 tracking-tight">Add a new client</h2>
+            <p class="text-sm text-gray-500 mt-1">Manage your client database and track their transactions and consignments.</p>
+        </div>
+        <a href="{{ route('clients.create') }}" class="btn btn-primary justify-center">
+            + Add Client
+        </a>
+    </div>
+
     <div class="card overflow-hidden p-0">
         @if($clients->count())
             <div class="table-container border-0 rounded-none">

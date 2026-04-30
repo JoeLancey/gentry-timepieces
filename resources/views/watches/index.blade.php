@@ -117,6 +117,18 @@
         @endif
     </div>
 
+    <div class="card p-5 mb-6 flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
+        <div>
+            <h2 class="text-lg font-bold text-gray-900 tracking-tight">Manage your inventory</h2>
+            <p class="text-sm text-gray-500 mt-1">Add new watches to track and manage your collection with detailed information.</p>
+        </div>
+        @if(auth()->user()->isAdmin())
+            <a href="{{ route('watches.create') }}" class="btn btn-primary justify-center">
+                + Add Watch
+            </a>
+        @endif
+    </div>
+
     <!-- Bulk Actions Bar -->
     <div id="bulkActionsBar" class="card bg-gray-50 border border-gray-200 p-4 mb-6 hidden" x-show="bulkSelected">
         <div class="flex flex-wrap items-center gap-4">
