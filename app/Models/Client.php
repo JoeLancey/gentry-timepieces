@@ -16,6 +16,7 @@ class Client extends Model
         'email',
         'address',
         'notes',
+        'client_type',
     ];
 
     public function getFullNameAttribute(): string
@@ -26,6 +27,11 @@ class Client extends Model
     public function appraisals()
     {
         return $this->hasMany(Appraisal::class);
+    }
+
+    public function inquiries()
+    {
+        return $this->hasMany(Inquiry::class);
     }
 
     public function consignments()

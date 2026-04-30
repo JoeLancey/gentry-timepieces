@@ -17,6 +17,7 @@ class Watch extends Model
         'serial_number',
         'year_produced',
         'condition',
+        'authenticity_status',
         'has_box',
         'has_papers',
         'asking_price',
@@ -29,6 +30,11 @@ class Watch extends Model
     public function appraisals()
     {
         return $this->hasMany(Appraisal::class);
+    }
+
+    public function inquiries()
+    {
+        return $this->hasMany(Inquiry::class);
     }
 
     public function consignments()

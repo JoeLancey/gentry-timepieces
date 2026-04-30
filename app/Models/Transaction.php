@@ -13,8 +13,10 @@ class Transaction extends Model
         'watch_id',
         'client_id',
         'staff_id',
+        'trade_in_watch_id',
         'type',
         'amount',
+        'trade_in_appraisal_value',
         'invoice_number',
         'notes',
     ];
@@ -22,6 +24,11 @@ class Transaction extends Model
     public function watch()
     {
         return $this->belongsTo(Watch::class);
+    }
+
+    public function tradeInWatch()
+    {
+        return $this->belongsTo(Watch::class, 'trade_in_watch_id');
     }
 
     public function client()

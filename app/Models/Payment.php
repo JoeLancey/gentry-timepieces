@@ -11,6 +11,7 @@ class Payment extends Model
 
     protected $fillable = [
         'transaction_id',
+        'client_id',
         'amount',
         'method',
         'reference_number',
@@ -26,6 +27,11 @@ class Payment extends Model
     public function transaction()
     {
         return $this->belongsTo(Transaction::class);
+    }
+
+    public function client()
+    {
+        return $this->belongsTo(Client::class);
     }
 
     // Scopes

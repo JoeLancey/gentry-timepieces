@@ -18,6 +18,13 @@ class Appraisal extends Model
         'has_box',
         'has_papers',
         'status',
+        'completed_at',
+        'authenticity_conclusion',
+        'documentation_quality',
+    ];
+
+    protected $casts = [
+        'completed_at' => 'datetime',
     ];
 
     public function watch()

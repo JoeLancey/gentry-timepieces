@@ -18,11 +18,14 @@ class Consignment extends Model
         'start_date',
         'end_date',
         'notes',
+        'commission_paid',
+        'commission_paid_at',
     ];
 
     protected $casts = [
         'start_date' => 'date',
         'end_date'   => 'date',
+        'commission_paid_at' => 'datetime',
     ];
 
     public function watch()
