@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AppraisalController extends Controller {
     public function index() { return view('appraisals.index', ['appraisals' => Appraisal::with(['watch','client','appraiser'])->latest()->paginate(15)]); }
-    public function create() { return view('appraisals.create', ['clients'=>Client::all(),'appraisers'=>User::where('role', 'staff')->get()]); }
+    public function create() { return view('appraisals.create', ['appraisers'=>User::where('role', 'staff')->get()]); }
     public function store(StoreAppraisalRequest $request) {
         DB::transaction(function () use ($request) {
             $watch = Watch::create([
@@ -30,7 +30,7 @@ class AppraisalController extends Controller {
 
             Appraisal::create([
                 'watch_id' => $watch->id,
-                'client_id' => $request->client_id,
+                'client_id' => $request->client_id ?? null,
                 'appraiser_id' => $request->appraiser_id,
                 'appraised_value' => $request->appraised_value,
                 'condition_notes' => $request->condition_notes,
@@ -54,7 +54,7 @@ class AppraisalController extends Controller {
             'watch_has_box' => 'boolean',
             'watch_has_papers' => 'boolean',
             'watch_description' => 'nullable|string|max:1000',
-            'client_id' => 'required|exists:clients,id',
+            'client_id' => 'nullable|exists:clients,id',
             'appraiser_id' => 'required|exists:users,id',
             'appraised_value' => 'required|numeric|min:0',
             'condition_notes' => 'required|string|max:1000',
@@ -78,7 +78,7 @@ class AppraisalController extends Controller {
             ]);
 
             $appraisal->update([
-                'client_id' => $request->client_id,
+                'client_id' => $request->client_id ?? null,
                 'appraiser_id' => $request->appraiser_id,
                 'appraised_value' => $request->appraised_value,
                 'condition_notes' => $request->condition_notes,

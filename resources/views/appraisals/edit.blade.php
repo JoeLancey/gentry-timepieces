@@ -76,18 +76,6 @@
 
                 <div class="form-grid form-grid-2">
                     <div class="form-group">
-                        <label class="form-label">Client *</label>
-                        <select name="client_id" class="form-select" required>
-                            @foreach($clients as $client)
-                                <option value="{{ $client->id }}" {{ old('client_id',$appraisal->client_id)==$client->id?'selected':'' }}>
-                                    {{ $client->full_name }}
-                                </option>
-                            @endforeach
-                        </select>
-                        @error('client_id')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="form-group">
                         <label class="form-label">Appraiser *</label>
                         <select name="appraiser_id" class="form-select" required>
                             @foreach($appraisers as $appraiser)

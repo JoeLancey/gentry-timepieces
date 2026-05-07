@@ -4,6 +4,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\WatchController;
 use App\Http\Controllers\ClientController;
+use App\Http\Controllers\ClientSearchController;
 use App\Http\Controllers\AppraisalController;
 use App\Http\Controllers\ConsignmentController;
 use App\Http\Controllers\TransactionController;
@@ -19,6 +20,7 @@ Route::get('/', function () {
 // Main app routes require authentication and role-based access
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard');
+    Route::get('/api/clients/search', [ClientSearchController::class, 'search'])->name('clients.search');
 
     Route::resource('watches', WatchController::class);
     Route::post('watches/bulk-action', [WatchController::class, 'bulkAction'])->name('watches.bulkAction');

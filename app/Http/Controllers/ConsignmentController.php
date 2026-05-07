@@ -31,7 +31,7 @@ class ConsignmentController extends Controller {
         return view('consignments.index', compact('consignments', 'expiringSoon')); 
     }
     public function create() { 
-        return view('consignments.create', ['availableWatches'=>Watch::available()->get(),'clients'=>Client::all()]); 
+        return view('consignments.create', ['availableWatches'=>Watch::available()->get()]); 
     }
     public function store(StoreConsignmentRequest $request) {
         $consignment = Consignment::create($request->validated());
@@ -42,7 +42,7 @@ class ConsignmentController extends Controller {
         return view('consignments.show', compact('consignment')); 
     }
     public function edit(Consignment $consignment) { 
-        return view('consignments.edit', ['consignment'=>$consignment,'watches'=>Watch::all(),'clients'=>Client::all()]); 
+        return view('consignments.edit', ['consignment'=>$consignment,'watches'=>Watch::all()]); 
     }
     public function update(UpdateConsignmentRequest $request, Consignment $consignment) {
         $originalWatchId = $consignment->watch_id;
@@ -71,7 +71,14 @@ class ConsignmentController extends Controller {
         };
 
         if ($consignment->watch) {
-            $consignment->watch->update(['status' => $watchStatus]);
+            $updateData = ['status' => $watchStatus];
+            
+            // When sold from consignment, set cost_price to agreed_price for inventory tracking
+            if ($consignment->status === 'sold') {
+                $updateData['cost_price'] = $consignment->agreed_price;
+            }
+            
+            $consignment->watch->update($updateData);
         }
     }
 }
