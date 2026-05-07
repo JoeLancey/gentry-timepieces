@@ -1,7 +1,7 @@
 <x-guest-layout>
     <div class="w-full max-w-md mx-auto px-4 py-16 sm:py-20 lg:py-24">
-        <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-            <div class="px-8 py-10 sm:px-10 sm:py-12">
+        <div class="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden min-h-[520px]">
+            <div class="px-8 py-12 sm:px-10 sm:py-16">
                 <div class="text-center mb-10">
                     <div class="flex flex-col items-center justify-center mb-6">
                         <h1 class="text-4xl font-serif font-bold text-gray-900 tracking-wide">Gentry</h1>
