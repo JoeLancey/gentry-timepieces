@@ -453,6 +453,7 @@
         .badge-good       { background: #fef3c7; color: #78350f; }
         .badge-fair       { background: #fee2e2; color: #7f1d1d; }
         .badge-sale       { background: #d1fae5; color: #065f46; }
+        .badge-buy        { background: #dbeafe; color: #1d4ed8; }
         .badge-trade_in   { background: #ede9fe; color: #4c1d95; }
         .badge-admin      { background: #1f2937; color: #fff; }
         .badge-staff      { background: #e5e7eb; color: #374151; }

@@ -17,6 +17,7 @@ class Transaction extends Model
         'type',
         'amount',
         'trade_in_appraisal_value',
+        'trade_in_cash_from',
         'invoice_number',
         'notes',
     ];

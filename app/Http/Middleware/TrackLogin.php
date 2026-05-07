@@ -13,17 +13,16 @@ class TrackLogin
      */
     public function handle(Request $request, Closure $next)
     {
-        $response = $next($request);
-
-        // Track login if user just authenticated (not already logged in)
         if (auth()->check()) {
             $user = auth()->user();
-            
-            // Check if this is a new login session (no last_login_at or it's old)
-            if (!$user->last_login_at || $user->last_login_at->diffInMinutes(now()) > 30) {
-                $user->update(['last_login_at' => now()]);
-                
-                // Log the login activity
+
+            $user->forceFill(['last_seen_at' => now()])->save();
+
+            $sessionKey = 'login_logged_for_user_' . $user->id;
+
+            if (!session()->has($sessionKey)) {
+                $user->forceFill(['last_login_at' => now()])->save();
+
                 ActivityLog::log(
                     'login',
                     'User',
@@ -31,9 +30,11 @@ class TrackLogin
                     null,
                     "User logged in from {$request->ip()}"
                 );
+
+                session()->put($sessionKey, true);
             }
         }
 
-        return $response;
+        return $next($request);
     }
 }

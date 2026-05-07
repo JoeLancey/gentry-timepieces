@@ -48,12 +48,12 @@
                             </td>
                             <td>
                                 @if($user->isOnline())
-                                    <div class="flex items-center gap-2">
-                                        <span class="inline-block w-2 h-2 bg-green-500 rounded-full"></span>
-                                        <span class="text-xs font-semibold text-green-700">Online</span>
-                                    </div>
+                                    <span class="inline-flex items-center gap-1 rounded-full border border-green-200 bg-green-50 px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-green-700">
+                                        <span class="h-2 w-2 rounded-full bg-green-500"></span>
+                                        Online
+                                    </span>
                                 @else
-                                    <span class="text-xs text-gray-500">Offline</span>
+                                    <span class="inline-flex items-center rounded-full border border-gray-200 bg-gray-50 px-2 py-1 text-[11px] font-semibold uppercase tracking-wider text-gray-500">Offline</span>
                                 @endif
                             </td>
                             <td class="text-sm text-gray-600">

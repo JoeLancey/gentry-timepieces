@@ -11,11 +11,11 @@
 
                     <div class="form-grid form-grid-2">
                         <div class="form-group">
-                            <label class="form-label">Watch *</label>
-                            <select name="watch_id" class="form-select" required>
+                            <label class="form-label" id="watch_label">Watch *</label>
+                            <select name="watch_id" id="watch_id" class="form-select" required>
                                 @foreach($watches as $watch)
-                                    <option value="{{ $watch->id }}" {{ old('watch_id',$transaction->watch_id)==$watch->id?'selected':'' }}>
-                                        {{ $watch->brand }} {{ $watch->model }}
+                                    <option value="{{ $watch->id }}" data-price="{{ $watch->asking_price }}" {{ old('watch_id',$transaction->watch_id)==$watch->id?'selected':'' }}>
+                                        {{ $watch->brand }} {{ $watch->model }} (₱{{ number_format($watch->asking_price,2) }})
                                     </option>
                                 @endforeach
                             </select>
@@ -33,18 +33,50 @@
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Type *</label>
-                            <select name="type" class="form-select" required>
+                            <label class="form-label">Transaction Type *</label>
+                            <select name="type" id="transaction_type" class="form-select" required>
                                 <option value="sale" {{ old('type',$transaction->type)=='sale'?'selected':'' }}>Sale</option>
+                                <option value="buy" {{ old('type',$transaction->type)=='buy'?'selected':'' }}>Buy</option>
                                 <option value="trade_in" {{ old('type',$transaction->type)=='trade_in'?'selected':'' }}>Trade-in</option>
                             </select>
                             @error('type')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
 
                         <div class="form-group">
-                            <label class="form-label">Amount (₱) *</label>
+                            <label class="form-label" id="amount_label">Amount (₱) *</label>
                             <input type="number" name="amount" class="form-input" value="{{ old('amount',$transaction->amount) }}" step="0.01" required>
                             @error('amount')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+                    </div>
+
+                    <div id="trade_in_fields" class="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6 hidden">
+                        <div class="form-group md:col-span-2">
+                            <label class="form-label">Trade-in Watch</label>
+                            <select name="trade_in_watch_id" class="form-select">
+                                <option value="">— Select trade-in watch —</option>
+                                @foreach($watches as $watch)
+                                    <option value="{{ $watch->id }}" {{ old('trade_in_watch_id', $transaction->trade_in_watch_id) == $watch->id ? 'selected' : '' }}>
+                                        {{ $watch->brand }} {{ $watch->model }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('trade_in_watch_id')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Trade-in Value (₱)</label>
+                            <input type="number" name="trade_in_appraisal_value" class="form-input" value="{{ old('trade_in_appraisal_value', $transaction->trade_in_appraisal_value) }}" step="0.01" min="0">
+                            @error('trade_in_appraisal_value')<div class="form-error">{{ $message }}</div>@enderror
+                        </div>
+
+                        <div class="form-group md:col-span-3">
+                            <label class="form-label">Who adds cash?</label>
+                            <select name="trade_in_cash_from" class="form-select">
+                                <option value="">— Select who adds cash —</option>
+                                <option value="company" {{ old('trade_in_cash_from', $transaction->trade_in_cash_from) === 'company' ? 'selected' : '' }}>Company adds cash</option>
+                                <option value="client" {{ old('trade_in_cash_from', $transaction->trade_in_cash_from) === 'client' ? 'selected' : '' }}>Client adds cash</option>
+                            </select>
+                            @error('trade_in_cash_from')<div class="form-error">{{ $message }}</div>@enderror
                         </div>
                     </div>
 
@@ -132,5 +164,31 @@
                 resultsDiv.classList.add('hidden');
             }
         });
+
+        const transactionType = document.getElementById('transaction_type');
+        const tradeInFields = document.getElementById('trade_in_fields');
+        const watchLabel = document.getElementById('watch_label');
+        const amountLabel = document.getElementById('amount_label');
+
+        function updateTransactionTypeUi() {
+            const type = transactionType.value;
+
+            tradeInFields.classList.toggle('hidden', type !== 'trade_in');
+
+            if (type === 'buy') {
+                watchLabel.textContent = 'Watch Purchased *';
+                amountLabel.textContent = 'Purchase Price (₱) *';
+            } else if (type === 'trade_in') {
+                watchLabel.textContent = 'Watch Sold *';
+                amountLabel.textContent = 'Cash Difference (₱) *';
+            } else {
+                watchLabel.textContent = 'Watch *';
+                amountLabel.textContent = 'Amount (₱) *';
+            }
+        }
+
+        transactionType.addEventListener('change', updateTransactionTypeUi);
+
+        updateTransactionTypeUi();
     </script>
 </x-app-layout>

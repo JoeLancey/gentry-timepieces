@@ -16,6 +16,7 @@ class User extends Authenticatable
         'password',
         'role',
         'last_login_at',
+        'last_seen_at',
     ];
 
     protected $hidden = [
@@ -27,6 +28,7 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
         'password' => 'hashed',
         'last_login_at' => 'datetime',
+        'last_seen_at' => 'datetime',
     ];
 
     public function isAdmin(): bool
@@ -41,7 +43,9 @@ class User extends Authenticatable
 
     public function isOnline(): bool
     {
-        return $this->last_login_at && $this->last_login_at->diffInMinutes(now()) < 5;
+        $lastSeen = $this->last_seen_at ?? $this->last_login_at;
+
+        return $lastSeen && $lastSeen->diffInMinutes(now()) < 5;
     }
 
     public function appraisals()

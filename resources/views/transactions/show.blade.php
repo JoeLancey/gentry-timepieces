@@ -25,6 +25,24 @@
                         <p class="text-sm text-gray-500 mt-0.5">Serial: {{ $transaction->watch->serial_number ?? '—' }}</p>
                     </div>
 
+                    @if($transaction->type === 'buy')
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Purchase Type</p>
+                        <p class="font-semibold text-gray-900">Buy</p>
+                        <p class="text-sm text-gray-500 mt-0.5">Watch bought into inventory</p>
+                    </div>
+                    @elseif($transaction->type === 'trade_in')
+                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                        <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Trade-in Watch</p>
+                        <p class="font-semibold text-gray-900">
+                            {{ $transaction->tradeInWatch?->brand }} {{ $transaction->tradeInWatch?->model }}
+                        </p>
+                        <p class="text-sm text-gray-500 mt-0.5">
+                            Cash from: {{ ucfirst($transaction->trade_in_cash_from ?? '—') }}
+                        </p>
+                    </div>
+                    @endif
+
                     <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Client</p>
                         <p class="font-semibold text-gray-900">{{ $transaction->client->first_name }} {{ $transaction->client->last_name }}</p>
@@ -78,6 +96,12 @@
                         <span class="text-gray-500">Type</span>
                         <strong class="text-gray-800 capitalize">{{ str_replace('_', ' ', $transaction->type) }}</strong>
                     </div>
+                    @if($transaction->type === 'trade_in')
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Trade-in Cash</span>
+                        <strong class="text-gray-900">{{ ucfirst($transaction->trade_in_cash_from ?? '—') }}</strong>
+                    </div>
+                    @endif
                     <div class="border-t border-gray-200 my-2"></div>
                     <div class="flex justify-between items-center">
                         <span class="text-gray-500">Recorded On</span>
@@ -105,6 +129,17 @@
                         <span class="text-gray-500">Asking Price</span>
                         <strong class="text-gray-900">₱{{ number_format($transaction->watch->asking_price, 2) }}</strong>
                     </div>
+                    @if($transaction->type === 'trade_in' && $transaction->tradeInWatch)
+                    <div class="border-t border-gray-200 my-2"></div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Trade-in Watch</span>
+                        <strong class="text-gray-900">{{ $transaction->tradeInWatch->brand }} {{ $transaction->tradeInWatch->model }}</strong>
+                    </div>
+                    <div class="flex justify-between items-center">
+                        <span class="text-gray-500">Trade-in Value</span>
+                        <strong class="text-gray-900">₱{{ number_format($transaction->trade_in_appraisal_value ?? 0, 2) }}</strong>
+                    </div>
+                    @endif
                 </div>
             </div>
         </div>

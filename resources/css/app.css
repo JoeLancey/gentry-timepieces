@@ -462,6 +462,10 @@ h1, h2, h3, h4, h5, h6 {
     @apply bg-emerald-100 text-emerald-800 border border-emerald-200;
 }
 
+.badge-buy {
+    @apply bg-sky-100 text-sky-800 border border-sky-200;
+}
+
 .badge-trade_in {
     @apply bg-indigo-100 text-indigo-800 border border-indigo-200;
 }
@@ -480,6 +484,10 @@ h1, h2, h3, h4, h5, h6 {
 
     .badge-sale {
         @apply bg-emerald-100 text-emerald-800 border border-emerald-200;
+    }
+
+    .badge-buy {
+        @apply bg-sky-100 text-sky-800 border border-sky-200;
     }
 
     .badge-trade_in {

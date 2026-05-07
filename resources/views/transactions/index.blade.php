@@ -49,6 +49,7 @@
                 <select name="type" class="form-select">
                     <option value="">All Types</option>
                     <option value="sale" {{ request('type') === 'sale' ? 'selected' : '' }}>Sale</option>
+                    <option value="buy" {{ request('type') === 'buy' ? 'selected' : '' }}>Buy</option>
                     <option value="trade_in" {{ request('type') === 'trade_in' ? 'selected' : '' }}>Trade-in</option>
                 </select>
             </div>

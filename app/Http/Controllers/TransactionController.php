@@ -37,7 +37,7 @@ class TransactionController extends Controller {
         return view('transactions.index', compact('transactions', 'stats')); 
     }
     public function create() { 
-        return view('transactions.create', ['watches'=>Watch::available()->get(),'clients'=>Client::all()]); 
+        return view('transactions.create', ['watches'=>Watch::all(),'clients'=>Client::all()]); 
     }
     public function store(StoreTransactionRequest $request) {
         $data = $request->validated();
@@ -48,6 +48,7 @@ class TransactionController extends Controller {
         return redirect()->route('transactions.index')->with('success','Transaction recorded.');
     }
     public function show(Transaction $transaction) { 
+        $transaction->load(['watch', 'tradeInWatch', 'client', 'staff']);
         return view('transactions.show', compact('transaction')); 
     }
     public function edit(Transaction $transaction) { 
@@ -74,10 +75,32 @@ class TransactionController extends Controller {
 
     private function syncWatchStatus(Transaction $transaction): void
     {
-        $status = $transaction->type === 'sale' ? 'sold' : 'available';
+        if ($transaction->type === 'sale') {
+            if ($transaction->watch) {
+                $transaction->watch->update(['status' => 'sold']);
+            }
+            return;
+        }
+
+        if ($transaction->type === 'buy') {
+            if ($transaction->watch) {
+                $transaction->watch->update([
+                    'status' => 'available',
+                    'cost_price' => $transaction->amount,
+                ]);
+            }
+            return;
+        }
 
         if ($transaction->watch) {
-            $transaction->watch->update(['status' => $status]);
+            $transaction->watch->update(['status' => 'sold']);
+        }
+
+        if ($transaction->tradeInWatch) {
+            $transaction->tradeInWatch->update([
+                'status' => 'available',
+                'cost_price' => $transaction->trade_in_appraisal_value ?? $transaction->amount,
+            ]);
         }
     }
 }

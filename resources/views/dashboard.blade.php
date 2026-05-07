@@ -141,7 +141,8 @@
                             <h3 class="text-lg font-semibold tracking-tight text-white">System Info</h3>
                             <p class="text-xs text-gray-300 mt-1 uppercase tracking-[0.16em]">Session Overview</p>
                         </div>
-                        <span class="inline-flex items-center rounded-full border border-green-500 bg-green-900 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-green-100">
+                        <span class="inline-flex items-center gap-1 rounded-full border border-green-500 bg-green-950 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-100">
+                            <span class="h-2 w-2 rounded-full bg-green-400"></span>
                             Online
                         </span>
                     </div>
