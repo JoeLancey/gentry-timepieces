@@ -1,19 +1,19 @@
 <x-guest-layout>
-    <div class="w-full max-w-lg mx-auto px-4 py-12 sm:py-14 lg:py-16">
-        <div class="text-center mb-10">
-            <div class="flex flex-col items-center justify-center mb-5">
+    <div class="w-full max-w-md mx-auto px-4 py-16 sm:py-20 lg:py-24">
+        <div class="text-center mb-12">
+            <div class="flex flex-col items-center justify-center mb-6">
                 <h1 class="text-4xl font-serif font-bold text-gray-900 tracking-wide">Gentry</h1>
-                <span class="text-xs tracking-[0.3em] uppercase text-gray-600 mt-1 font-medium">Timepieces</span>
+                <span class="text-xs tracking-[0.3em] uppercase text-gray-600 mt-2 font-medium">Timepieces</span>
             </div>
             <h2 class="text-2xl font-bold text-gray-900 tracking-tight">Sign in to your account</h2>
-            <p class="mt-3 text-sm text-gray-600 leading-relaxed">Manage inventory, appraisals, consignments and sales</p>
+            <p class="mt-4 text-sm text-gray-600 leading-relaxed">Manage inventory, appraisals, consignments and sales</p>
         </div>
 
         <div class="bg-white rounded-2xl shadow-xl border border-gray-200 overflow-hidden">
-            <div class="px-8 py-10 sm:px-10 sm:py-12 min-h-[460px] flex flex-col justify-between">
+            <div class="px-8 py-10 sm:px-10 sm:py-12">
                 <x-auth-session-status class="mb-6" :status="session('status')" />
 
-                <form class="space-y-5" method="POST" action="{{ route('login') }}">
+                <form class="space-y-6" method="POST" action="{{ route('login') }}">
                     @csrf
 
                     <div>
@@ -43,7 +43,7 @@
                         <x-input-error :messages="$errors->get('password')" class="mt-2 text-sm" />
                     </div>
 
-                    <div class="flex items-center justify-between pt-2 gap-4">
+                    <div class="flex items-center justify-between pt-2">
                         <label for="remember_me" class="flex items-center cursor-pointer">
                             <input
                                 id="remember_me"
@@ -55,7 +55,7 @@
                         </label>
 
                         @if (Route::has('password.request'))
-                            <a href="{{ route('password.request') }}" class="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200 whitespace-nowrap">
+                            <a href="{{ route('password.request') }}" class="text-sm font-medium text-gray-700 hover:text-gray-900 transition-colors duration-200">
                                 Forgot password?
                             </a>
                         @endif
@@ -68,12 +68,12 @@
                         Sign in
                     </button>
                 </form>
+            </div>
 
-                <div class="mt-10 text-center">
-                    <p class="text-xs text-gray-500 uppercase tracking-widest font-medium">
-                        Premium Watch Management System
-                    </p>
-                </div>
+            <div class="px-8 py-4 bg-gray-50 border-t border-gray-200">
+                <p class="text-xs text-gray-500 uppercase tracking-widest font-medium text-center">
+                    Premium Watch Management System
+                </p>
             </div>
         </div>
     </div>
