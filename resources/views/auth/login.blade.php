@@ -1,4 +1,4 @@
-x-guest-layout>
+<x-guest-layout>
     <div class="w-full max-w-md mx-auto px-4 py-16 sm:py-20 lg:py-24">
         <div class="bg-white rounded-3xl shadow-xl border border-gray-200 overflow-hidden min-h-[520px]">
             <div class="px-8 py-12 sm:px-10 sm:py-16">
