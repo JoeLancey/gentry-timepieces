@@ -5,6 +5,14 @@
 
     <x-alert />
 
+    <div class="mb-6 flex flex-col gap-3 rounded-lg border border-gray-200 bg-white p-4 shadow-sm md:flex-row md:items-center md:justify-between">
+        <div>
+            <h2 class="text-lg font-semibold text-gray-900">Staff Accounts</h2>
+            <p class="text-sm text-gray-500">Create, edit, promote, or remove staff accounts from one place.</p>
+        </div>
+        <a href="{{ route('users.create') }}" class="btn btn-primary justify-center">+ Add User</a>
+    </div>
+
     <!-- Filter -->
     <div class="card p-4 mb-6">
         <form method="GET" class="flex items-end gap-3">
