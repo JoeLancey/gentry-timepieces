@@ -23,5 +23,8 @@ class AppServiceProvider extends ServiceProvider
     public function boot(): void
     {
         Gate::policy(ActivityLog::class, ActivityLogPolicy::class);
+
+        // Ensure PHP's default timezone matches the app timezone (Asia/Manila)
+        date_default_timezone_set(config('app.timezone'));
     }
 }
