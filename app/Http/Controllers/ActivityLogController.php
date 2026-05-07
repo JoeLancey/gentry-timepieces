@@ -12,6 +12,7 @@ class ActivityLogController extends Controller
         $this->authorize('viewAny', ActivityLog::class);
         
         $logs = ActivityLog::with(['user'])
+            ->when(request('user_id'), fn($q) => $q->where('user_id', request('user_id')))
             ->when(request('model_type'), fn($q) => $q->where('model_type', request('model_type')))
             ->when(request('action'), fn($q) => $q->where('action', request('action')))
             ->latest()
