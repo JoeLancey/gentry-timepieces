@@ -133,32 +133,32 @@
             </div>
 
             <!-- System Info -->
-            <div class="relative overflow-hidden rounded-xl border border-slate-800 bg-slate-950 text-white p-6 shadow-lg">
-                <div class="pointer-events-none absolute -top-12 -right-10 h-36 w-36 rounded-full bg-slate-700/20 blur-2xl"></div>
+            <div class="relative overflow-hidden rounded-xl border border-gray-300 bg-gray-900 text-white p-6 shadow-lg">
+                <div class="pointer-events-none absolute -top-12 -right-10 h-36 w-36 rounded-full bg-gray-800/20 blur-2xl"></div>
                 <div class="relative">
                     <div class="flex items-start justify-between gap-3 mb-5">
                         <div>
-                            <h3 class="text-lg font-semibold tracking-tight">System Info</h3>
-                            <p class="text-xs text-slate-400 mt-1 uppercase tracking-[0.16em]">Session Overview</p>
+                            <h3 class="text-lg font-semibold tracking-tight text-white">System Info</h3>
+                            <p class="text-xs text-gray-300 mt-1 uppercase tracking-[0.16em]">Session Overview</p>
                         </div>
-                        <span class="inline-flex items-center rounded-full border border-emerald-400/35 bg-emerald-400/10 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-emerald-300">
+                        <span class="inline-flex items-center rounded-full border border-green-500 bg-green-900 px-2.5 py-1 text-[11px] font-semibold uppercase tracking-wider text-green-100">
                             Online
                         </span>
                     </div>
 
                     <div class="grid grid-cols-1 gap-3">
-                        <div class="rounded-lg border border-slate-800 bg-slate-900/70 px-4 py-3">
-                            <p class="text-[11px] uppercase tracking-[0.16em] text-slate-400">Signed In</p>
+                        <div class="rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
+                            <p class="text-[11px] uppercase tracking-[0.16em] text-gray-300 font-semibold">Signed In</p>
                             <p class="mt-1 text-lg font-semibold leading-tight text-white">{{ auth()->user()->name }}</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="rounded-lg border border-slate-800 bg-slate-900/70 px-4 py-3">
-                                <p class="text-[11px] uppercase tracking-[0.16em] text-slate-400">Role</p>
+                            <div class="rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.16em] text-gray-300 font-semibold">Role</p>
                                 <p class="mt-1 text-base font-semibold capitalize text-white">{{ auth()->user()->role }}</p>
                             </div>
-                            <div class="rounded-lg border border-slate-800 bg-slate-900/70 px-4 py-3">
-                                <p class="text-[11px] uppercase tracking-[0.16em] text-slate-400">Date</p>
+                            <div class="rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.16em] text-gray-300 font-semibold">Date</p>
                                 <p class="mt-1 text-base font-semibold text-white">{{ now()->format('M d, Y') }}</p>
                             </div>
                         </div>
