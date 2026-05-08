@@ -46,8 +46,8 @@ class ConsignmentController extends Controller {
                 'condition' => $request->watch_condition,
                 'has_box' => $request->boolean('watch_has_box'),
                 'has_papers' => $request->boolean('watch_has_papers'),
-                'asking_price' => $request->watch_asking_price,
-                'cost_price' => $request->watch_cost_price,
+                'asking_price' => $request->agreed_price,
+                'cost_price' => 0,
                 'status' => 'consigned',
                 'description' => $request->watch_description,
             ]);

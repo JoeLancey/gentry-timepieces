@@ -57,18 +57,6 @@
                         </select>
                         @error('watch_condition')<div class="form-error">{{ $message }}</div>@enderror
                     </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Asking Price (₱) *</label>
-                        <input type="number" name="watch_asking_price" class="form-input" value="{{ old('watch_asking_price') }}" step="0.01" min="0" required>
-                        @error('watch_asking_price')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Cost Price (₱) *</label>
-                        <input type="number" name="watch_cost_price" class="form-input" value="{{ old('watch_cost_price') }}" step="0.01" min="0" required>
-                        @error('watch_cost_price')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
                 </div>
 
                 <div class="flex gap-6 my-6 flex-wrap">

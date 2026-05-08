@@ -22,8 +22,6 @@ class StoreConsignmentRequest extends FormRequest
             'watch_condition' => 'required|in:mint,excellent,good,fair',
             'watch_has_box' => 'boolean',
             'watch_has_papers' => 'boolean',
-            'watch_asking_price' => 'required|numeric|min:0',
-            'watch_cost_price' => 'required|numeric|min:0',
             'watch_description' => 'nullable|string|max:1000',
             'client_id' => 'required|exists:clients,id',
             'agreed_price' => 'required|numeric|min:0',
