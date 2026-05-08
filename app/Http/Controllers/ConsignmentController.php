@@ -5,6 +5,7 @@ use App\Models\Watch;
 use App\Models\Client;
 use App\Http\Requests\StoreConsignmentRequest;
 use App\Http\Requests\UpdateConsignmentRequest;
+use Illuminate\Support\Facades\DB;
 
 class ConsignmentController extends Controller {
     public function index() { 
@@ -31,11 +32,38 @@ class ConsignmentController extends Controller {
         return view('consignments.index', compact('consignments', 'expiringSoon')); 
     }
     public function create() { 
-        return view('consignments.create', ['availableWatches'=>Watch::available()->get()]); 
+        return view('consignments.create'); 
     }
     public function store(StoreConsignmentRequest $request) {
-        $consignment = Consignment::create($request->validated());
-        $this->syncWatchStatus($consignment);
+        DB::transaction(function () use ($request) {
+            // Create the watch with consigned status
+            $watch = Watch::create([
+                'brand' => $request->watch_brand,
+                'model' => $request->watch_model,
+                'reference_number' => $request->watch_reference_number,
+                'serial_number' => $request->watch_serial_number,
+                'year_produced' => $request->watch_year_produced,
+                'condition' => $request->watch_condition,
+                'has_box' => $request->boolean('watch_has_box'),
+                'has_papers' => $request->boolean('watch_has_papers'),
+                'asking_price' => $request->watch_asking_price,
+                'cost_price' => $request->watch_cost_price,
+                'status' => 'consigned',
+                'description' => $request->watch_description,
+            ]);
+
+            // Create the consignment with the new watch
+            Consignment::create([
+                'watch_id' => $watch->id,
+                'client_id' => $request->client_id,
+                'agreed_price' => $request->agreed_price,
+                'commission_rate' => $request->commission_rate,
+                'status' => 'active',
+                'start_date' => $request->start_date,
+                'end_date' => $request->end_date,
+                'notes' => $request->notes,
+            ]);
+        });
         return redirect()->route('consignments.index')->with('success','Consignment saved.');
     }
     public function show(Consignment $consignment) { 
