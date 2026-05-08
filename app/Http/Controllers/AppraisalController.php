@@ -10,7 +10,7 @@ use Illuminate\Support\Facades\DB;
 
 class AppraisalController extends Controller {
     public function index() { return view('appraisals.index', ['appraisals' => Appraisal::with(['watch','client','appraiser'])->latest()->paginate(15)]); }
-    public function create() { return view('appraisals.create', ['appraisers'=>User::where('role', 'staff')->get()]); }
+    public function create() { return view('appraisals.create', ['clients'=>Client::all(), 'appraisers'=>User::where('role', 'staff')->get()]); }
     public function store(StoreAppraisalRequest $request) {
         DB::transaction(function () use ($request) {
             $watch = Watch::create([

@@ -23,7 +23,7 @@ class StoreAppraisalRequest extends FormRequest
             'watch_has_box' => 'boolean',
             'watch_has_papers' => 'boolean',
             'watch_description' => 'nullable|string|max:1000',
-            'client_id' => 'required|exists:clients,id',
+            'client_id' => 'nullable|exists:clients,id',
             'appraiser_id' => 'required|exists:users,id',
             'appraised_value' => 'required|numeric|min:0',
             'condition_notes' => 'required|string|max:1000',
