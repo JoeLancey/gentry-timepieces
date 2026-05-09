@@ -1,7 +1,7 @@
 <x-app-layout header="Edit Appraisal">
-    <x-slot:actions>
+    <x-slot name="actions">
         <a href="{{ route('appraisals.show', $appraisal) }}" class="btn btn-secondary">← Back</a>
-    </x-slot:actions>
+    </x-slot>
 
     <div class="max-w-2xl">
         <div class="card p-6">

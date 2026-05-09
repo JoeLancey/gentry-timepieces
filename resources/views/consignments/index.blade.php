@@ -5,6 +5,10 @@
 
 	<x-alert />
 
+	<div class="mb-4">
+		<a href="{{ route('consignments.create') }}" class="btn btn-primary">+ New Consignment</a>
+	</div>
+
 	<div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
 		<div class="stat-card">
 			<p class="stat-label">Total Consignments</p>

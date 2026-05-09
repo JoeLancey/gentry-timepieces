@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Client;
+use App\Models\ActivityLog;
 use App\Services\ActivityLogService;
 use Illuminate\Http\Request;
 
@@ -47,12 +48,17 @@ class ClientController extends Controller
         // Calculate total paid through transactions' payments
         $totalPaid = $client->transactions()
             ->join('payments', 'transactions.id', '=', 'payments.transaction_id')
-            ->where('payments.status', 'completed')
+            ->whereIn('payments.status', ['confirmed', 'completed'])
             ->sum('payments.amount');
         
         $outstandingBalance = $totalSpent - $totalPaid;
         $averageSpend = $totalTransactions > 0 ? $totalSpent / $totalTransactions : 0;
-        $recentTransactions = $client->transactions()->latest()->take(10)->get();
+        $recentTransactions = $client->transactions()->with(['watch', 'payments'])->latest()->take(10)->get();
+        $timeline = ActivityLog::where('model_type', 'Client')
+            ->where('model_id', $client->id)
+            ->latest()
+            ->take(8)
+            ->get();
 
         return view('clients.show', compact(
             'client',
@@ -61,7 +67,8 @@ class ClientController extends Controller
             'totalPaid',
             'outstandingBalance',
             'averageSpend',
-            'recentTransactions'
+            'recentTransactions',
+            'timeline'
         ));
     }
 

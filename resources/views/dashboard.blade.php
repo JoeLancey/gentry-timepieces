@@ -1,7 +1,7 @@
 <x-app-layout header="Dashboard">
-    <x-slot:actions>
+    <x-slot name="actions">
         <a href="{{ route('watches.create') }}" class="btn btn-primary">+ Add Watch</a>
-    </x-slot:actions>
+    </x-slot>
 
     <!-- Database Error Alert -->
     @if(isset($db_error))
@@ -133,34 +133,33 @@
             </div>
 
             <!-- System Info -->
-            <div class="relative overflow-hidden rounded-xl border border-gray-300 bg-gray-900 text-white p-6 shadow-lg">
-                <div class="pointer-events-none absolute -top-12 -right-10 h-36 w-36 rounded-full bg-gray-800/20 blur-2xl"></div>
-                <div class="relative">
+            <div class="card p-6">
+                <div>
                     <div class="flex items-start justify-between gap-3 mb-5">
                         <div>
-                            <h3 class="text-lg font-semibold tracking-tight text-white">System Info</h3>
-                            <p class="text-xs text-gray-300 mt-1 uppercase tracking-[0.16em]">Session Overview</p>
+                            <h3 class="text-lg font-semibold tracking-tight text-gray-900">System Info</h3>
+                            <p class="text-xs text-gray-500 mt-1 uppercase tracking-[0.16em]">Session Overview</p>
                         </div>
-                        <span class="inline-flex items-center gap-1 rounded-full border border-green-500 bg-green-950 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-100">
+                        <span class="inline-flex items-center gap-1 rounded-full border border-green-300 bg-green-50 px-2 py-0.5 text-[10px] font-semibold uppercase tracking-wider text-green-700">
                             <span class="h-2 w-2 rounded-full bg-green-400"></span>
                             Online
                         </span>
                     </div>
 
                     <div class="grid grid-cols-1 gap-3">
-                        <div class="rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
-                            <p class="text-[11px] uppercase tracking-[0.16em] text-gray-300 font-semibold">Signed In</p>
-                            <p class="mt-1 text-lg font-semibold leading-tight text-white">{{ auth()->user()->name }}</p>
+                        <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                            <p class="text-[11px] uppercase tracking-[0.16em] text-gray-500 font-semibold">Signed In</p>
+                            <p class="mt-1 text-lg font-semibold leading-tight text-gray-900">{{ auth()->user()->name }}</p>
                         </div>
 
                         <div class="grid grid-cols-2 gap-3">
-                            <div class="rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
-                                <p class="text-[11px] uppercase tracking-[0.16em] text-gray-300 font-semibold">Role</p>
-                                <p class="mt-1 text-base font-semibold capitalize text-white">{{ auth()->user()->role }}</p>
+                            <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.16em] text-gray-500 font-semibold">Role</p>
+                                <p class="mt-1 text-base font-semibold capitalize text-gray-900">{{ auth()->user()->role }}</p>
                             </div>
-                            <div class="rounded-lg border border-gray-700 bg-gray-800 px-4 py-3">
-                                <p class="text-[11px] uppercase tracking-[0.16em] text-gray-300 font-semibold">Date</p>
-                                <p class="mt-1 text-base font-semibold text-white">{{ now()->format('M d, Y') }}</p>
+                            <div class="rounded-lg border border-gray-200 bg-gray-50 px-4 py-3">
+                                <p class="text-[11px] uppercase tracking-[0.16em] text-gray-500 font-semibold">Date</p>
+                                <p class="mt-1 text-base font-semibold text-gray-900">{{ now()->format('M d, Y') }}</p>
                             </div>
                         </div>
                     </div>
@@ -180,11 +179,11 @@
                 </svg>
             </div>
             <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <p class="text-sm text-gray-500 mb-1">Pending</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $pendingAppraisals }}</p>
                 </div>
-                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <p class="text-sm text-gray-500 mb-1">Completed</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $completedAppraisals }}</p>
                 </div>
@@ -203,11 +202,11 @@
                 </svg>
             </div>
             <div class="grid grid-cols-2 gap-4">
-                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <p class="text-sm text-gray-500 mb-1">Active</p>
                     <p class="text-2xl font-bold text-gray-900">{{ $activeConsignments }}</p>
                 </div>
-                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <p class="text-sm text-gray-500 mb-1">Total Value</p>
                     <p class="text-2xl font-bold text-gray-900">₱{{ number_format($totalConsignmentValue, 0) }}</p>
                 </div>

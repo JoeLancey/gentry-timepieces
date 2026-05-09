@@ -202,11 +202,6 @@ h1, h2, h3, h4, h5, h6 {
 
     .stat-card {
         @apply card p-6 hover:shadow-md transition-shadow duration-200;
-        border-left: 3px solid var(--color-primary);
-    }
-
-    .stat-card:hover {
-        border-left-width: 4px;
     }
 
     .stat-label {
@@ -235,7 +230,10 @@ h1, h2, h3, h4, h5, h6 {
     }
 
     .table {
-        @apply w-full border-collapse;
+        @apply w-full;
+        border-collapse: separate;
+        border-spacing: 0;
+        table-layout: auto;
     }
 
     .table thead {
@@ -256,6 +254,24 @@ h1, h2, h3, h4, h5, h6 {
 
     .table td {
         @apply px-6 py-4 text-sm text-gray-700;
+        vertical-align: middle;
+        line-height: 1.4;
+    }
+
+    .table th {
+        vertical-align: middle;
+        line-height: 1.2;
+    }
+
+    .table th:last-child,
+    .table td:last-child {
+        white-space: nowrap;
+    }
+
+    .table td .btn,
+    .table td button,
+    .table td .badge {
+        vertical-align: middle;
     }
 
     .invoice-badge {
@@ -269,6 +285,31 @@ h1, h2, h3, h4, h5, h6 {
     .watch-info span {
         @apply text-sm text-gray-500;
     }
+}
+
+/* Remove black left accent strips from detail cards site-wide */
+.border-l-4.border-l-gray-900 {
+    border-left-width: 0 !important;
+}
+
+/* Ensure card variants remain white and consistent */
+.card.bg-gray-900,
+.stat-card.bg-gray-900 {
+    background: var(--color-white) !important;
+    color: var(--color-gray-900) !important;
+    border: 1px solid var(--color-gray-200) !important;
+}
+
+.card.bg-gray-900 .text-white,
+.stat-card.bg-gray-900 .text-white {
+    color: var(--color-gray-900) !important;
+}
+
+.card.bg-gray-900 .text-gray-400,
+.card.bg-gray-900 .text-gray-300,
+.stat-card.bg-gray-900 .text-gray-400,
+.stat-card.bg-gray-900 .text-gray-300 {
+    color: var(--color-gray-500) !important;
 }
 
 /* ── FORMS ── */

@@ -88,7 +88,7 @@ class AppraisalController extends Controller {
     public function update(UpdateAppraisalRequest $request, Appraisal $appraisal) {
         $oldValues = $appraisal->only(['appraised_value', 'condition_notes', 'review_notes', 'status']);
 
-        DB::transaction(function () use ($request, $appraisal) {
+        DB::transaction(function () use ($request, $appraisal, $oldValues) {
             $appraisal->watch->update([
                 'brand' => $request->watch_brand,
                 'model' => $request->watch_model,

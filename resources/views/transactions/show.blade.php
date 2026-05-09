@@ -19,20 +19,20 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
-                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Watch</p>
                         <p class="font-semibold text-gray-900">{{ $transaction->watch->brand }} {{ $transaction->watch->model }}</p>
                         <p class="text-sm text-gray-500 mt-0.5">Serial: {{ $transaction->watch->serial_number ?? '—' }}</p>
                     </div>
 
                     @if($transaction->type === 'buy')
-                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Purchase Type</p>
                         <p class="font-semibold text-gray-900">Buy</p>
                         <p class="text-sm text-gray-500 mt-0.5">Watch bought into inventory</p>
                     </div>
                     @elseif($transaction->type === 'trade_in')
-                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Trade-in Watch</p>
                         <p class="font-semibold text-gray-900">
                             {{ $transaction->tradeInWatch?->brand }} {{ $transaction->tradeInWatch?->model }}
@@ -43,19 +43,19 @@
                     </div>
                     @endif
 
-                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Client</p>
                         <p class="font-semibold text-gray-900">{{ $transaction->client->first_name }} {{ $transaction->client->last_name }}</p>
                         <p class="text-sm text-gray-500 mt-0.5">{{ $transaction->client->email ?? '—' }}</p>
                     </div>
 
-                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Staff</p>
                         <p class="font-semibold text-gray-900">{{ $transaction->staff->name }}</p>
                         <p class="text-sm text-gray-500 mt-0.5">{{ $transaction->staff->email }}</p>
                     </div>
 
-                    <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                    <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                         <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Amount</p>
                         <p class="text-2xl font-bold text-gray-900">₱{{ number_format($transaction->amount, 2) }}</p>
                         <p class="text-sm text-gray-500 mt-0.5">Transaction value</p>
@@ -63,7 +63,7 @@
                 </div>
 
                 @if($transaction->notes)
-                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg border-l-4 border-l-gray-900 mb-6">
+                <div class="p-4 bg-gray-50 border border-gray-200 rounded-lg mb-6">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Notes</p>
                     <p class="text-gray-700 leading-relaxed">{{ $transaction->notes }}</p>
                 </div>

@@ -1,11 +1,10 @@
 <x-app-layout header="Appraisal Details">
-    <x-slot:actions>
+    <x-slot name="actions">
         <a href="{{ route('appraisals.edit', $appraisal) }}" class="btn btn-primary">Edit</a>
         <a href="{{ route('appraisals.index') }}" class="btn btn-secondary">← Back</a>
-    </x-slot:actions>
+    </x-slot>
 
-    <div class="max-w-2xl">
-        <div class="card p-6">
+    <div class="card p-6">
             <div class="mb-6 p-4 rounded-lg border border-gray-200 bg-gray-50">
                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Workflow Status</p>
                 <div class="flex items-center gap-3 flex-wrap">
@@ -27,7 +26,7 @@
             <div class="mb-6 p-4 rounded-lg border border-gray-200 bg-white">
                 <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-3">Workflow Timeline</p>
                 <div class="space-y-4">
-                    @foreach($timeline->sortBy('created_at')->values() as $entry)
+                    @forelse($timeline->sortBy('created_at')->values() as $entry)
                         <div class="flex items-start gap-3">
                             <span class="mt-1 h-2.5 w-2.5 rounded-full bg-gray-900"></span>
                             <div>
@@ -36,28 +35,30 @@
                                 <p class="text-xs text-gray-500">{{ $entry->created_at->format('M d, Y h:i A') }}</p>
                             </div>
                         </div>
-                    @endforeach
+                    @empty
+                        <p class="text-sm text-gray-500">No activity yet.</p>
+                    @endforelse
                 </div>
             </div>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Watch</p>
                     <p class="font-semibold text-gray-900">{{ $appraisal->watch->brand }} {{ $appraisal->watch->model }}</p>
                     <p class="text-sm text-gray-500">Serial: {{ $appraisal->watch->serial_number }}</p>
                 </div>
 
-                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Client</p>
                     <p class="font-semibold text-gray-900">{{ $appraisal->client->first_name }} {{ $appraisal->client->last_name }}</p>
                 </div>
 
-                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Appraiser</p>
                     <p class="font-semibold text-gray-900">{{ $appraisal->appraiser->name }}</p>
                 </div>
 
-                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Appraised Value</p>
                     <p class="text-2xl font-bold text-gray-900">
                         @if($appraisal->status === 'completed')
@@ -68,17 +69,17 @@
                     </p>
                 </div>
 
-                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Status</p>
                     <p><span class="badge badge-{{ $appraisal->status }}">{{ ucfirst($appraisal->status) }}</span></p>
                 </div>
 
-                <div class="p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-1">Date</p>
                     <p class="text-gray-900">{{ $appraisal->created_at->format('M d, Y') }}</p>
                 </div>
 
-                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Details</p>
                     <div class="flex gap-4 text-sm">
                         <span>Has Box: <strong>{{ $appraisal->has_box ? 'Yes' : 'No' }}</strong></span>
@@ -87,7 +88,7 @@
                 </div>
 
                 @if($appraisal->review_notes)
-                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Send Back Note</p>
                     <p class="text-gray-700">{{ $appraisal->review_notes }}</p>
                 </div>
@@ -106,7 +107,7 @@
                 @endif
 
                 @if($appraisal->condition_notes)
-                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border-l-4 border-l-gray-900">
+                <div class="md:col-span-2 p-4 bg-gray-50 rounded-lg border border-gray-200">
                     <p class="text-xs font-semibold uppercase tracking-wider text-gray-500 mb-2">Condition Notes</p>
                     <p class="text-gray-700">{{ $appraisal->condition_notes }}</p>
                 </div>
@@ -138,6 +139,5 @@
                     <button type="submit" class="btn btn-danger">Delete</button>
                 </form>
             </div>
-        </div>
     </div>
 </x-app-layout>

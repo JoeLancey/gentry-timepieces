@@ -1,24 +1,24 @@
 <x-app-layout header="Reports">
     <!-- Key Metrics Row -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8 stagger-children">
-        <div class="stat-card bg-gray-900 text-white border-0">
-            <p class="stat-label" style="color: #9ca3af;">Total Revenue</p>
-            <p class="stat-value" style="color: #fff;">₱{{ number_format($confirmedPayments, 2) }}</p>
-            <p class="text-xs text-gray-400 mt-2">From confirmed payments</p>
+        <div class="stat-card">
+            <p class="stat-label">Total Revenue</p>
+            <p class="stat-value">₱{{ number_format($confirmedPayments, 2) }}</p>
+            <p class="text-sm text-gray-500 mt-2">From confirmed payments</p>
         </div>
         <div class="stat-card">
             <p class="stat-label">Total Sales</p>
-            <p class="stat-value text-blue-600">{{ $salesCount }}</p>
+            <p class="stat-value text-gray-900">{{ $salesCount }}</p>
             <p class="text-sm text-gray-500 mt-2">₱{{ number_format($totalSales, 2) }}</p>
         </div>
         <div class="stat-card">
             <p class="stat-label">Active Consignments</p>
-            <p class="stat-value text-purple-600">{{ $activeConsignments }}</p>
+            <p class="stat-value text-gray-900">{{ $activeConsignments }}</p>
             <p class="text-sm text-gray-500 mt-2">₱{{ number_format($consignmentValue, 2) }}</p>
         </div>
         <div class="stat-card">
             <p class="stat-label">Pending Payments</p>
-            <p class="stat-value text-orange-600">₱{{ number_format($pendingPayments, 2) }}</p>
+            <p class="stat-value text-gray-900">₱{{ number_format($pendingPayments, 2) }}</p>
             <p class="text-sm text-gray-500 mt-2">Awaiting confirmation</p>
         </div>
     </div>
@@ -49,8 +49,11 @@
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Watches by Condition -->
-        <div class="card p-6">
-            <h3 class="text-base font-bold text-gray-900 mb-4 tracking-tight">Inventory by Condition</h3>
+        <div class="card overflow-hidden p-0">
+            <div class="card-header bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Inventory by Condition</h3>
+            </div>
+            <div class="p-6">
             @forelse($watchesBycondition as $condition)
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
@@ -68,11 +71,15 @@
             @empty
                 <p class="text-gray-400">No inventory data</p>
             @endforelse
+            </div>
         </div>
 
         <!-- Payment Methods -->
-        <div class="card p-6">
-            <h3 class="text-base font-bold text-gray-900 mb-4 tracking-tight">Payments by Method</h3>
+        <div class="card overflow-hidden p-0">
+            <div class="card-header bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Payments by Method</h3>
+            </div>
+            <div class="p-6">
             @forelse($paymentsByMethod as $method)
                 <div class="mb-4">
                     <div class="flex justify-between items-center mb-2">
@@ -81,21 +88,24 @@
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2 overflow-hidden">
                         @php $percentage = ($method->total / max(1, $paymentsByMethod->sum('total')) * 100); @endphp
-                        <div class="h-full bg-blue-600 transition-all duration-500" style="width: {{ $percentage }}%"></div>
+                        <div class="h-full bg-gray-900 transition-all duration-500" style="width: {{ $percentage }}%"></div>
                     </div>
                     <p class="text-xs text-gray-500 mt-1">₱{{ number_format($method->total, 0) }}</p>
                 </div>
             @empty
                 <p class="text-gray-400">No payment data</p>
             @endforelse
+            </div>
         </div>
     </div>
 
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
         <!-- Watch Status Distribution -->
-        <div class="card p-6">
-            <h3 class="text-base font-bold text-gray-900 mb-4 tracking-tight">Watches by Status</h3>
-            <div class="space-y-3">
+        <div class="card overflow-hidden p-0">
+            <div class="card-header bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Watches by Status</h3>
+            </div>
+            <div class="p-6 space-y-3">
                 @forelse($watchesByStatus as $status)
                     <div class="flex items-center gap-3">
                         <span class="badge badge-{{ $status->status }}">{{ $status->status }}</span>
@@ -112,9 +122,11 @@
         </div>
 
         <!-- Appraisal Progress -->
-        <div class="card p-6">
-            <h3 class="text-base font-bold text-gray-900 mb-4 tracking-tight">Appraisal Progress</h3>
-            <div class="space-y-5">
+        <div class="card overflow-hidden p-0">
+            <div class="card-header bg-gray-50 border-b border-gray-200 px-6 py-4">
+                <h3 class="text-base font-bold text-gray-900 tracking-tight">Appraisal Progress</h3>
+            </div>
+            <div class="p-6 space-y-5">
                 <div>
                     <div class="flex justify-between items-center mb-2">
                         <span class="font-semibold text-gray-800">Completed</span>
@@ -131,7 +143,7 @@
                         <span class="text-sm text-gray-500">{{ $appraisalsPending }}</span>
                     </div>
                     <div class="w-full bg-gray-200 rounded-full h-2.5 overflow-hidden">
-                        <div class="h-full bg-orange-500 transition-all duration-500" style="width: {{ ($appraisalsPending / $total) * 100 }}%"></div>
+                        <div class="h-full bg-gray-700 transition-all duration-500" style="width: {{ ($appraisalsPending / $total) * 100 }}%"></div>
                     </div>
                 </div>
             </div>
@@ -157,7 +169,7 @@
                         @foreach($topClients as $client)
                             <tr class="group hover:bg-gray-50 transition-colors">
                                 <td class="font-semibold text-gray-900">
-                                    {{ $client->client?->name ?? 'Unknown' }}
+                                    {{ trim(($client->client?->first_name ?? '') . ' ' . ($client->client?->last_name ?? '')) ?: 'Unknown' }}
                                 </td>
                                 <td class="text-center text-gray-600">{{ $client->transaction_count }}</td>
                                 <td class="text-right font-bold text-gray-900">

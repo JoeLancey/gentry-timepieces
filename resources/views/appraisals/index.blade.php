@@ -4,6 +4,10 @@
 	</x-slot>
     <x-alert />
 
+    <div class="mb-4">
+        <a href="{{ route('appraisals.create') }}" class="btn btn-primary">+ New Appraisal</a>
+    </div>
+
     <div class="card p-4 mb-5">
         <form method="GET" action="{{ route('appraisals.index') }}" class="grid gap-4 md:grid-cols-[1.5fr_0.8fr_auto] md:items-end">
             <div class="form-group">
