@@ -1,7 +1,7 @@
 <x-app-layout header="Consignments">
-	<x-slot:actions>
+	<x-slot name="actions">
 		<a href="{{ route('consignments.create') }}" class="btn btn-primary">+ New Consignment</a>
-	</x-slot:actions>
+	</x-slot>
 
 	<x-alert />
 

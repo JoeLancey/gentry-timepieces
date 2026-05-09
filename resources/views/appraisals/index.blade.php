@@ -1,9 +1,32 @@
 <x-app-layout header="Appraisals">
-    <x-slot:actions>
-        <a href="{{ route('appraisals.create') }}" class="btn btn-primary">+ New Appraisal</a>
-    </x-slot:actions>
-
+	<x-slot name="actions">
+		<a href="{{ route('appraisals.create') }}" class="btn btn-primary">+ New Appraisal</a>
+	</x-slot>
     <x-alert />
+
+    <div class="card p-4 mb-5">
+        <form method="GET" action="{{ route('appraisals.index') }}" class="grid gap-4 md:grid-cols-[1.5fr_0.8fr_auto] md:items-end">
+            <div class="form-group">
+                <label class="form-label">Search</label>
+                <input type="text" name="search" value="{{ request('search') }}" class="form-input" placeholder="Watch, client, or appraiser">
+            </div>
+
+            <div class="form-group">
+                <label class="form-label">Status</label>
+                <select name="status" class="form-select">
+                    <option value="">All statuses</option>
+                    @foreach(['pending','checking','completed','rejected'] as $status)
+                        <option value="{{ $status }}" {{ request('status') === $status ? 'selected' : '' }}>{{ ucfirst($status) }}</option>
+                    @endforeach
+                </select>
+            </div>
+
+            <div class="flex gap-2">
+                <button type="submit" class="btn btn-primary">Filter</button>
+                <a href="{{ route('appraisals.index') }}" class="btn btn-secondary">Clear</a>
+            </div>
+        </form>
+    </div>
 
     <div class="card overflow-hidden p-0">
         @if($appraisals->count())
@@ -32,7 +55,11 @@
                             <td class="text-gray-700">{{ $a->client->first_name }} {{ $a->client->last_name }}</td>
                             <td class="text-gray-600">{{ $a->appraiser->name }}</td>
                             <td class="text-right font-semibold text-gray-900">
-                                ₱{{ number_format($a->appraised_value, 2) }}
+                                @if($a->status === 'completed')
+                                    ₱{{ number_format($a->appraised_value, 2) }}
+                                @else
+                                    Awaiting review
+                                @endif
                             </td>
                             <td>
                                 <span class="badge badge-{{ $a->status }}">
@@ -43,11 +70,28 @@
                             <td class="text-right">
                                 <div class="flex items-center justify-end gap-2">
                                     <a href="{{ route('appraisals.show', $a) }}" class="btn btn-secondary btn-sm">View</a>
-                                    <a href="{{ route('appraisals.edit', $a) }}" class="btn btn-ghost text-sm" title="Edit">
-                                        <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
-                                        </svg>
-                                    </a>
+                                    @if($a->status === 'pending')
+                                        <form method="POST" action="{{ route('appraisals.checking', $a) }}" class="inline">
+                                            @csrf
+                                            <button type="submit" class="btn btn-ghost text-sm" title="Send to Checking">
+                                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 5l7 7-7 7M5 12h14"/>
+                                                </svg>
+                                            </button>
+                                        </form>
+                                    @elseif($a->status === 'checking')
+                                        <a href="{{ route('appraisals.edit', $a) }}" class="btn btn-ghost text-sm" title="Complete Review">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"/>
+                                            </svg>
+                                        </a>
+                                    @elseif($a->status === 'completed')
+                                        <a href="{{ route('watches.show', $a->watch) }}" class="btn btn-ghost text-sm" title="View Inventory Record">
+                                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                                            </svg>
+                                        </a>
+                                    @endif
                                     <form method="POST" action="{{ route('appraisals.destroy', $a) }}" onsubmit="return confirm('Delete this appraisal?')" class="inline">
                                         @csrf @method('DELETE')
                                         <button type="submit" class="btn btn-ghost text-danger text-sm" title="Delete">

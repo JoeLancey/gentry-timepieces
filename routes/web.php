@@ -31,6 +31,8 @@ Route::middleware(['auth'])->group(function () {
     
     Route::resource('clients', ClientController::class);
     Route::resource('appraisals', AppraisalController::class);
+    Route::post('appraisals/{appraisal}/checking', [AppraisalController::class, 'markChecking'])->name('appraisals.checking');
+    Route::post('appraisals/{appraisal}/reject', [AppraisalController::class, 'reject'])->name('appraisals.reject');
     Route::resource('consignments', ConsignmentController::class);
     Route::resource('transactions', TransactionController::class);
     Route::resource('payments', PaymentController::class);

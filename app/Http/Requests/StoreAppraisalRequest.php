@@ -25,11 +25,8 @@ class StoreAppraisalRequest extends FormRequest
             'watch_description' => 'nullable|string|max:1000',
             'client_id' => 'nullable|exists:clients,id',
             'appraiser_id' => 'required|exists:users,id',
-            'appraised_value' => 'required|numeric|min:0',
-            'condition_notes' => 'required|string|max:1000',
             'has_box' => 'boolean',
             'has_papers' => 'boolean',
-            'status' => 'required|in:pending,completed,rejected',
         ];
     }
 }

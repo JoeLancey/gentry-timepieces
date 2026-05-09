@@ -12,7 +12,7 @@
 
                 <div class="mb-6 p-4 bg-gray-50 border border-gray-200 rounded-lg">
                     <h3 class="text-base font-bold text-gray-900 tracking-tight">Watch Intake</h3>
-                    <p class="text-sm text-gray-500 mt-1">Enter the new watch details brought in by the client. The system will create the watch record automatically.</p>
+                    <p class="text-sm text-gray-500 mt-1">Enter the client intake details. The appraisal starts in pending status and the staff appraiser will review it next.</p>
                 </div>
 
                 <div class="form-grid form-grid-2">
@@ -92,9 +92,9 @@
                     </div>
 
                     <div class="form-group">
-                        <label class="form-label">Appraiser *</label>
+                        <label class="form-label">Staff Appraiser *</label>
                         <select name="appraiser_id" class="form-select" required>
-                            <option value="">Select Appraiser</option>
+                            <option value="">Select staff member</option>
                             @foreach($appraisers as $appraiser)
                                 <option value="{{ $appraiser->id }}" {{ old('appraiser_id')==$appraiser->id?'selected':'' }}>
                                     {{ $appraiser->name }}
@@ -102,22 +102,6 @@
                             @endforeach
                         </select>
                         @error('appraiser_id')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Appraised Value (₱) *</label>
-                        <input type="number" name="appraised_value" class="form-input" value="{{ old('appraised_value') }}" step="0.01" min="0" required>
-                        @error('appraised_value')<div class="form-error">{{ $message }}</div>@enderror
-                    </div>
-
-                    <div class="form-group">
-                        <label class="form-label">Status *</label>
-                        <select name="status" class="form-select" required>
-                            @foreach(['pending','completed','rejected'] as $s)
-                                <option value="{{ $s }}" {{ old('status','pending')==$s?'selected':'' }}>{{ ucfirst($s) }}</option>
-                            @endforeach
-                        </select>
-                        @error('status')<div class="form-error">{{ $message }}</div>@enderror
                     </div>
                 </div>
 
@@ -130,12 +114,6 @@
                         <input type="checkbox" name="has_papers" value="1" class="gt-checkbox" {{ old('has_papers')?'checked':'' }}>
                         <span class="text-sm text-gray-700">Has Papers</span>
                     </label>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">Condition Notes *</label>
-                    <textarea name="condition_notes" class="form-textarea" required>{{ old('condition_notes') }}</textarea>
-                    @error('condition_notes')<div class="form-error">{{ $message }}</div>@enderror
                 </div>
 
                 <div class="flex items-center gap-3 pt-4 border-t border-gray-200">

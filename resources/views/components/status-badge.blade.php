@@ -8,6 +8,7 @@ $badgeMap = [
     'reserved' => 'badge-reserved',
     'active' => 'badge-active',
     'pending' => 'badge-pending',
+    'checking' => 'badge-checking',
     'completed' => 'badge-completed',
     'rejected' => 'badge-rejected',
     'confirmed' => 'badge-confirmed',

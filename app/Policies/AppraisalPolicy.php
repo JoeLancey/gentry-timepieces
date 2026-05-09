@@ -19,12 +19,11 @@ class AppraisalPolicy
 
     public function create(User $user): bool
     {
-        return in_array($user->role, ['admin', 'appraiser']);
+        return in_array($user->role, ['admin', 'staff']);
     }
 
     public function update(User $user, Appraisal $appraisal): bool
     {
-        // Only the assigned appraiser or admin can update
         return $user->id === $appraisal->appraiser_id || $user->role === 'admin';
     }
 
